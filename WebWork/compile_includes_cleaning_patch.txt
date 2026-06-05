@@ -1,0 +1,19 @@
+Идея фикс (минимальная): вернуть стандартные globs SDK, т.к. текущие включения могут приводить к двойной компиляции.
+
+Сейчас в WebWork.csproj:
+- EnableDefaultItems=false
+- EnableDefaultCompileItems=false
+- Compile Include="**\*.cs" Exclude="bin\**;obj\**"
+
+Предлагаю вернуть к стандартному:
+1) удалить ItemGroup с Compile Include="**\*.cs" ...
+2) удалить EnableDefaultItems/EnableDefaultCompileItems (или поставить true/убрать)
+3) оставить только PackageReference.
+
+После правки выполнить:
+- dotnet clean
+- dotnet build
+
+Если дубликат исчезнет — причина была в неправильном compile-includes.
+
+Если дубликат останется — тогда источником является не includes, а сгенерированный .g.cs/другая сборка/условия SDK, и нужен binlog разбор.
