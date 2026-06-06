@@ -1,4 +1,0 @@
-Версия MSBuild 17.13.13+1c2026462 для .NET
-D:\Desktop\Техническое задание\WebWork\Services\ProjectCalculationService.cs(8,14): error CS0101: Пространство имен "WebWork.Services" уже содержит определение для "ProjectCalculationService". [D:\Desktop\Техническое задание\WebWork\WebWork.csproj]
-D:\Desktop\Техническое задание\WebWork\Services\ProjectCalculationService.cs(12,12): error CS0111: Тип "ProjectCalculationService" уже определяет член "ProjectCalculationService" с такими же типами параметров. [D:\Desktop\Техническое задание\WebWork\WebWork.csproj]
-D:\Desktop\Техническое задание\WebWork\Services\ProjectCalculationService.cs(14,23): error CS0111: Тип "ProjectCalculationService" уже определяет член "RecalculateAsync" с такими же типами параметров. [D:\Desktop\Техническое задание\WebWork\WebWork.csproj]
