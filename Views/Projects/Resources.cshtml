@@ -1,0 +1,87 @@
+@model WebWork.Models.Project
+@using WebWork.Enums
+@{
+    ViewData["Title"] = "Ресурсы проекта";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Управление проектом: ресурсы</h2>
+<p><b>@Model.Title</b> (ID: @Model.Id)</p>
+
+<h3>Список ресурсов</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Тип</th>
+        <th>ResourceId</th>
+        <th>Услуга</th>
+        <th>Units</th>
+        <th>Margin</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Resources != null)
+    {
+        foreach (var r in Model.Resources)
+        {
+            <tr>
+                <td>@r.Type</td>
+                <td>
+                    @(r.EmployeeId?.ToString() ?? r.ExecutorId?.ToString() ?? r.SubcontractorId?.ToString() ?? r.EquipmentId?.ToString() ?? "")
+                </td>
+                <td>@(r.ServiceName ?? "")</td>
+                <td>@r.UnitsCount</td>
+                <td>@r.MarginPercent%</td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<h3 style="margin-top:18px;">Добавить ресурс</h3>
+
+<form asp-action="AddResource" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="projectId" value="@Model.Id" />
+
+    <div class="row">
+        <div class="field" style="flex:1; min-width:200px;">
+            <label>ResourceType</label>
+            <select name="ResourceType" id="ResourceType" onchange="onTypeChange()">
+                @foreach (ResourceType t in Enum.GetValues(typeof(ResourceType)))
+                {
+                    <option value="@( (int)t )">@t</option>
+                }
+            </select>
+        </div>
+        <div class="field" style="flex:1; min-width:200px;">
+            <label>ResourceId</label>
+            <input name="ResourceId" type="number" />
+            <input type="hidden" id="hiddenEmployeeId" name="EmployeeId" />
+            <input type="hidden" id="hiddenExecutorId" name="ExecutorId" />
+            <input type="hidden" id="hiddenSubcontractorId" name="SubcontractorId" />
+            <input type="hidden" id="hiddenEquipmentId" name="EquipmentId" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="field" style="flex:1; min-width:200px;">
+            <label>ServiceId</label>
+            <input name="ServiceId" type="number" />
+            <div style="font-size:12px; opacity:.7; margin-top:6px;">Пока используется для связки/расчёта. В интерфейсе можно оставить 1.</div>
+        </div>
+        <div class="field" style="flex:1; min-width:200px;">
+            <label>Units</label>
+            <input name="Units" type="number" step="any" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Margin, %</label>
+        <input name="Margin" type="number" step="any" />
+    </div>
+
+    <button type="submit" class="btn">Добавить</button>
+</form>
+

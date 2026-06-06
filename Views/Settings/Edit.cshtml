@@ -1,0 +1,40 @@
+@model WebWork.Models.CompanySettings
+@{
+    ViewData["Title"] = "Редактировать настройки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>✏️ Редактировать настройки компании</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    
+    <div class="field">
+        <label>Название компании</label>
+        <input asp-for="CompanyName" class="form-control" />
+    </div>
+    <div class="field">
+        <label>ФИО руководителя</label>
+        <input asp-for="DirectorFullName" class="form-control" />
+    </div>
+    <div class="field">
+        <label>Должность руководителя</label>
+        <input asp-for="DirectorPosition" class="form-control" />
+    </div>
+    <div class="field">
+        <label>Телефон</label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+    <div class="field">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" type="email" />
+    </div>
+    <div class="field">
+        <label>Путь к логотипу (опционально)</label>
+        <input asp-for="LogoPath" class="form-control" />
+    </div>
+    
+    <button type="submit" class="btn">Сохранить</button>
+    <a href="/Settings" class="btn-secondary">Отмена</a>
+</form>

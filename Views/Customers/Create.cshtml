@@ -1,0 +1,49 @@
+@model WebWork.Models.Customer
+
+@{
+    ViewData["Title"] = "Создать заказчика";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Создать заказчика</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="field">
+        <label asp-for="Inn">ИНН</label>
+        <input asp-for="Inn" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Type">Тип заказчика</label>
+        <select asp-for="Type" asp-items="Html.GetEnumSelectList<WebWork.Enums.CustomerType>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="Name">Название (если ИП/ЮЛ)</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div class="field">
+        <label asp-for="FullName">ФИО руководителя / ФИО</label>
+        <input asp-for="FullName" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" type="email" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Phone">Телефон</label>
+        <input asp-for="Phone" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Customers">↩️ К списку</a>
+</p>
+

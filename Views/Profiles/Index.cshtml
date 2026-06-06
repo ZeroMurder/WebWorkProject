@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Профиль пользователя";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>👤 Профиль пользователя</h2>
+
+<div class="card">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1;">
+            <h3>Информация об аккаунте</h3>
+            <p><strong>Email:</strong> @User.Identity?.Name</p>
+            <p><strong>Роли:</strong></p>
+            <ul>
+                @foreach (var role in User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))
+                {
+                    <li>@role</li>
+                }
+            </ul>
+        </div>
+        <div style="flex: 1;">
+            <h3>Доступные разделы</h3>
+            <ul>
+                <li><a href="/Projects">📊 Проекты</a> - управление проектами</li>
+                <li><a href="/Customers">🏢 Заказчики</a> - реестр заказчиков</li>
+                <li><a href="/Employees">👥 Сотрудники</a> - реестр сотрудников</li>
+                <li><a href="/Executors">👨‍💻 Исполнители</a> - реестр физ.лиц</li>
+                <li><a href="/Subcontractors">🤝 Субподрядчики</a> - реестр ЮЛ/ИП</li>
+                <li><a href="/Equipments">🖥️ Оборудование</a> - реестр оборудования</li>
+                <li><a href="/Settings">⚙️ Параметры</a> - настройки компании</li>
+            </ul>
+        </div>
+    </div>
+    
+    <hr />
+    
+    <form asp-controller="Account" asp-action="Logout" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn" style="background: #dc3545;">🚪 Выйти из системы</button>
+    </form>
+</div>
+
+@if (ViewBag.Message != null)
+{
+    <div class="card" style="margin-top: 20px; background: #fff3cd; border-left: 4px solid #ffc107;">
+        <p>ℹ️ @ViewBag.Message</p>
+    </div>
+}

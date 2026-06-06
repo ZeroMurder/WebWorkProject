@@ -1,0 +1,46 @@
+@model IEnumerable<WebWork.Models.Equipment>
+
+@{
+    ViewData["Title"] = "Реестр оборудования";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Реестр оборудования</h2>
+
+<p>
+    <a class="btn" href="/Equipments/Create">➕ Добавить оборудование</a>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Тип приобретения</th>
+        <th>Описаниe</th>
+        <th>Опер. стоимость</th>
+        <th>Ед. изм.</th>
+        <th>Цена за ед.</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@x.Id</td>
+            <td>@x.Title</td>
+            <td>@x.AcquisitionType</td>
+            <td>@(x.Description ?? "")</td>
+            <td>@(x.OperationalCost?.ToString() ?? "")</td>
+            <td>@x.Unit</td>
+            <td>@x.CostPerUnit</td>
+            <td>
+                <a class="btn secondary" href="/Equipments/Edit/@x.Id">✏️ Edit</a>
+                <a class="btn secondary" href="/Equipments/Delete/@x.Id">🗑️ Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

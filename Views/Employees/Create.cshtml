@@ -1,0 +1,49 @@
+@model WebWork.Models.Employee
+
+@{
+    ViewData["Title"] = "Создать сотрудника";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Создать сотрудника</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="field">
+        <label asp-for="Surname">Фамилия</label>
+        <input asp-for="Surname" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Name">Имя</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Patronymic">Отчество</label>
+        <input asp-for="Patronymic" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Position">Должность</label>
+        <input asp-for="Position" />
+    </div>
+
+    <div class="field">
+        <label asp-for="MonthlySalary">Заработная плата в месяц</label>
+        <input asp-for="MonthlySalary" type="number" step="any" />
+    </div>
+
+    <div class="field">
+        <label asp-for="TaxRate">Расчетная налоговая ставка, %</label>
+        <input asp-for="TaxRate" type="number" step="any" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Employees">↩️ К списку</a>
+</p>
+

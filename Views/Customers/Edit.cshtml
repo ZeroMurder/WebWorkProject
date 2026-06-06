@@ -1,0 +1,50 @@
+@model WebWork.Models.Customer
+
+@{
+    ViewData["Title"] = "Редактировать заказчика";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Редактировать заказчика</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="field">
+        <label asp-for="Inn">ИНН</label>
+        <input asp-for="Inn" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Type">Тип заказчика</label>
+        <select asp-for="Type" asp-items="Html.GetEnumSelectList<WebWork.Enums.CustomerType>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="Name">Название (если ИП/ЮЛ)</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div class="field">
+        <label asp-for="FullName">ФИО руководителя / ФИО</label>
+        <input asp-for="FullName" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" type="email" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Phone">Телефон</label>
+        <input asp-for="Phone" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Customers">↩️ К списку</a>
+</p>
+

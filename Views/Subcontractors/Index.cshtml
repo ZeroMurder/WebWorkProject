@@ -1,0 +1,50 @@
+@model IEnumerable<WebWork.Models.Subcontractor>
+
+@{
+    ViewData["Title"] = "Реестр субподрядчиков";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Реестр субподрядчиков</h2>
+
+<p>
+    <a class="btn" href="/Subcontractors/Create">➕ Создать субподрядчика</a>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>ИНН</th>
+        <th>Название</th>
+        <th>Контактное лицо</th>
+        <th>Email</th>
+        <th>Телефон</th>
+        <th>Ед. изм.</th>
+        <th>Цена за ед.</th>
+        <th>Налог, %</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@x.Id</td>
+            <td>@x.Inn</td>
+            <td>@x.Name</td>
+            <td>@x.ContactName</td>
+            <td>@x.Email</td>
+            <td>@x.Phone</td>
+            <td>@x.Unit</td>
+            <td>@x.CostPerUnit</td>
+            <td>@x.TaxRate</td>
+            <td>
+                <a class="btn secondary" href="/Subcontractors/Edit/@x.Id">✏️ Edit</a>
+                <a class="btn secondary" href="/Subcontractors/Delete/@x.Id">🗑️ Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

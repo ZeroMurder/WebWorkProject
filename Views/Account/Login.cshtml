@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Вход в систему";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var returnUrl = ViewBag.ReturnUrl as string ?? "/Projects";
+}
+
+<div style="max-width: 400px; margin: 0 auto;">
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 20px;">🔐 Вход в систему</h2>
+        
+        <form method="post" asp-action="Login">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+            
+            <div class="field">
+                <label>📧 Email или Логин</label>
+                <input name="username" type="text" required placeholder="admin@local" />
+            </div>
+            
+            <div class="field">
+                <label>🔒 Пароль</label>
+                <input name="password" type="password" required placeholder="Admin123!" />
+            </div>
+            
+            <div class="field">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input name="rememberMe" type="checkbox" value="true" />
+                    Запомнить меня
+                </label>
+            </div>
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div style="background: #fee; border: 1px solid #fcc; padding: 12px; border-radius: 8px; margin-bottom: 16px; color: #c00;">
+                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>⚠️ @err.ErrorMessage</div>
+                    }
+                </div>
+            }
+            
+            <button type="submit" class="btn" style="width: 100%;">Войти</button>
+        </form>
+        
+        <hr style="margin: 20px 0;" />
+        
+        <div style="text-align: center;">
+            <p>Нет аккаунта? <a href="/Register/Register">📝 Зарегистрироваться</a></p>
+            <p style="font-size: 12px; color: #666; margin-top: 16px;">
+                <strong>Тестовый доступ:</strong><br />
+                Email: admin@local<br />
+                Пароль: Admin123!
+            </p>
+        </div>
+    </div>
+</div>

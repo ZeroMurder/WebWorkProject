@@ -1,0 +1,62 @@
+@model WebWork.Models.Project
+@{
+    ViewData["Title"] = "Управление проектом";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Управление проектом: реквизиты</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="field">
+        <label asp-for="Title">Название</label>
+        <input asp-for="Title" />
+        <span asp-validation-for="Title" style="color:#dc2626"></span>
+    </div>
+
+    <div class="row">
+        <div class="field" style="flex:1; min-width:220px;">
+            <label asp-for="StartDate">Дата начала</label>
+            <input asp-for="StartDate" type="date" />
+        </div>
+        <div class="field" style="flex:1; min-width:220px;">
+            <label asp-for="EndDate">Дата окончания</label>
+            <input asp-for="EndDate" type="date" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label asp-for="CustomerId">CustomerId</label>
+        <input asp-for="CustomerId" type="number" />
+    </div>
+
+    <div class="field">
+        <label asp-for="TaxRate">Налог, %</label>
+        <input asp-for="TaxRate" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Description">Описание</label>
+        <textarea asp-for="Description" rows="3"></textarea>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="validation-summary">
+            <b>Проверьте ошибки ввода</b>
+            <ul>
+                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@err.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="row" style="margin-top:14px;">
+        <button type="submit" class="btn">Сохранить</button>
+        <a class="btn secondary" href="/Projects/Resources/@Model.Id" style="margin-left:8px;">К ресурсам</a>
+    </div>
+</form>
+

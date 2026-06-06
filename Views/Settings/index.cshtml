@@ -1,0 +1,35 @@
+@model IEnumerable<WebWork.Models.CompanySettings>
+@{
+    ViewData["Title"] = "Параметры системы";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>⚙️ Параметры системы</h2>
+
+<p>
+    <a class="btn" href="/Settings/Create">➕ Добавить параметр</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Параметр</th>
+            <th>Значение</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>Название компании</td>
+            <td>@item.CompanyName</td>
+            <td>
+                <a class="btn-secondary" href="/Settings/Edit/@item.Id">✏️ Редактировать</a>
+             </td>
+        </tr>
+    }
+    </tbody>
+</table>

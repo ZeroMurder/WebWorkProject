@@ -1,0 +1,55 @@
+@model WebWork.Models.Executor
+@using WebWork.Enums
+
+@{
+    ViewData["Title"] = "Создать исполнителя";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Создать исполнителя</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="field">
+        <label asp-for="Surname">Фамилия</label>
+        <input asp-for="Surname" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Name">Имя</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Patronymic">Отчество</label>
+        <input asp-for="Patronymic" />
+    </div>
+
+    <div class="field">
+        <label asp-for="EmploymentType">Тип оформления (ГПХ/НПД)</label>
+        <select asp-for="EmploymentType" asp-items="Html.GetEnumSelectList<EmploymentType>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="TaxRate">Расчетная налоговая ставка, %</label>
+        <input asp-for="TaxRate" type="number" step="any" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Unit">Единица измерения</label>
+        <select asp-for="Unit" asp-items="Html.GetEnumSelectList<TimeUnit>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="CostPerUnit">Стоимость услуг за единицу измерения</label>
+        <input asp-for="CostPerUnit" type="number" step="any" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Executors">↩️ К списку</a>
+</p>
+

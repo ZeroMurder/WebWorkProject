@@ -1,0 +1,51 @@
+@model WebWork.Models.Equipment
+@using WebWork.Enums
+
+@{
+    ViewData["Title"] = "Редактировать оборудование";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Редактировать оборудование</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="field">
+        <label asp-for="Title">Название</label>
+        <input asp-for="Title" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Description">Описание</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+
+    <div class="field">
+        <label asp-for="AcquisitionType">Тип приобретения</label>
+        <select asp-for="AcquisitionType" asp-items="Html.GetEnumSelectList<EquipmentAcquisitionType>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="OperationalCost">Эксплуатационная стоимость (если аренда)</label>
+        <input asp-for="OperationalCost" type="number" step="any" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Unit">Единица измерения</label>
+        <select asp-for="Unit" asp-items="Html.GetEnumSelectList<TimeUnit>()"></select>
+    </div>
+
+    <div class="field">
+        <label asp-for="CostPerUnit">Стоимость услуг за единицу</label>
+        <input asp-for="CostPerUnit" type="number" step="any" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Equipments">↩️ К списку</a>
+</p>
+

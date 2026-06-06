@@ -1,0 +1,44 @@
+@model IEnumerable<WebWork.Models.Executor>
+
+@{
+    ViewData["Title"] = "Реестр исполнителей";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Реестр исполнителей (физлиц)</h2>
+
+<p>
+    <a class="btn" href="/Executors/Create">➕ Создать исполнителя</a>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>ФИО</th>
+        <th>Тип</th>
+        <th>Налог, %</th>
+        <th>Ед. изм.</th>
+        <th>Цена за ед.</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@x.Id</td>
+            <td>@x.Surname @x.Name @(x.Patronymic ?? "")</td>
+            <td>@x.EmploymentType</td>
+            <td>@x.TaxRate</td>
+            <td>@x.Unit</td>
+            <td>@x.CostPerUnit</td>
+            <td>
+                <a class="btn secondary" href="/Executors/Edit/@x.Id">✏️ Edit</a>
+                <a class="btn secondary" href="/Executors/Delete/@x.Id">🗑️ Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

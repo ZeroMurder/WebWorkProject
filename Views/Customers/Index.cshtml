@@ -1,0 +1,46 @@
+@model IEnumerable<WebWork.Models.Customer>
+
+@{
+    ViewData["Title"] = "Реестр заказчиков";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Реестр заказчиков</h2>
+
+<p>
+    <a class="btn" href="/Customers/Create">➕ Создать заказчика</a>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>ИНН</th>
+        <th>Тип</th>
+        <th>Название</th>
+        <th>ФИО руководителя</th>
+        <th>Email</th>
+        <th>Телефон</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Inn</td>
+            <td>@c.Type</td>
+            <td>@(c.Name ?? "")</td>
+            <td>@c.FullName</td>
+            <td>@c.Email</td>
+            <td>@c.Phone</td>
+            <td>
+                <a class="btn secondary" href="/Customers/Edit/@c.Id">✏️ Edit</a>
+                <a class="btn secondary" href="/Customers/Delete/@c.Id">🗑️ Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

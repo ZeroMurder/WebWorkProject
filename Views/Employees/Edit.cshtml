@@ -1,0 +1,50 @@
+@model WebWork.Models.Employee
+
+@{
+    ViewData["Title"] = "Редактировать сотрудника";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Редактировать сотрудника</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="field">
+        <label asp-for="Surname">Фамилия</label>
+        <input asp-for="Surname" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Name">Имя</label>
+        <input asp-for="Name" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Patronymic">Отчество</label>
+        <input asp-for="Patronymic" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Position">Должность</label>
+        <input asp-for="Position" />
+    </div>
+
+    <div class="field">
+        <label asp-for="MonthlySalary">Оклад/мес</label>
+        <input asp-for="MonthlySalary" type="number" step="any" />
+    </div>
+
+    <div class="field">
+        <label asp-for="TaxRate">Налоговая ставка, %</label>
+        <input asp-for="TaxRate" type="number" step="any" />
+    </div>
+
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+
+<p>
+    <a class="btn secondary" href="/Employees">↩️ К списку</a>
+</p>
+

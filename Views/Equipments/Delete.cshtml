@@ -1,0 +1,18 @@
+@model WebWork.Models.Equipment
+
+@{
+    ViewData["Title"] = "Удалить оборудование";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Удалить оборудование</h2>
+
+<p>Уверены, что хотите удалить оборудование: <b>@Model.Title</b>?</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn">Да, удалить</button>
+    <a class="btn secondary" href="/Equipments">Отмена</a>
+</form>
+

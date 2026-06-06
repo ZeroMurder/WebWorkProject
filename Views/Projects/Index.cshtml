@@ -1,0 +1,42 @@
+@model IEnumerable<WebWork.Models.Project>
+@{
+    ViewData["Title"] = "Управление проектами";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>📋 Управление проектами</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="/Projects/Create" class="btn">➕ Создать проект</a>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название проекта</th>
+            <th>Статус</th>
+            <th>Срок выполнения</th>
+            <th>Стоимость</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.Id</td>
+            <td>@p.Title</td>
+            <td>@(p.EndDate >= DateTime.Today ? "🟢 Активен" : "🔴 Завершен")</td>
+            <td>@p.StartDate.ToString("dd.MM.yyyy") - @p.EndDate.ToString("dd.MM.yyyy")</td>
+            <td>@p.TotalCostWithMargin.ToString("N2") ₽</td>
+            <td>
+                <a href="/Projects/Edit/@p.Id" class="btn-secondary" style="padding:4px 8px;">✏️ Реквизиты</a>
+                <a href="/Projects/Resources/@p.Id" class="btn-secondary" style="padding:4px 8px;">📊 Ресурсы</a>
+                <a href="/api/Documents/project/@p.Id/commercial-offer/pdf" class="btn-secondary" style="padding:4px 8px;">📄 КП</a>
+                <a href="/api/Documents/project/@p.Id/nma/pdf" class="btn-secondary" style="padding:4px 8px;">📑 НМА</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

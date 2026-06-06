@@ -1,0 +1,72 @@
+@model WebWork.Controllers.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 500px; margin: 0 auto;">
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 20px;">📝 Регистрация нового пользователя</h2>
+        
+        <form method="post" asp-action="Register">
+            @Html.AntiForgeryToken()
+            
+            <div class="field">
+                <label>👤 Фамилия</label>
+                <input asp-for="LastName" type="text" required />
+            </div>
+            
+            <div class="field">
+                <label>👤 Имя</label>
+                <input asp-for="FirstName" type="text" required />
+            </div>
+            
+            <div class="field">
+                <label>👤 Отчество (опционально)</label>
+                <input asp-for="MiddleName" type="text" />
+            </div>
+            
+            <div class="field">
+                <label>💼 Должность</label>
+                <input asp-for="Position" type="text" required />
+            </div>
+            
+            <div class="field">
+                <label>📧 Email (будет использоваться как логин)</label>
+                <input asp-for="Email" type="email" required />
+            </div>
+            
+            <div class="field">
+                <label>🔒 Пароль</label>
+                <input asp-for="Password" type="password" required />
+                <small>Минимум 3 символа</small>
+            </div>
+            
+            <div class="field">
+                <label>👑 Роль (опционально)</label>
+                <select asp-for="Role" asp-items="ViewBag.Roles != null ? new SelectList(ViewBag.Roles) : null">
+                    <option value="">-- Выберите роль --</option>
+                </select>
+                <small>Доступные роли: GlobalAdmin, CommercialDirector, Accountant, HR</small>
+            </div>
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div style="background: #fee; border: 1px solid #fcc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div style="color: #c00;">⚠️ @err.ErrorMessage</div>
+                    }
+                </div>
+            }
+            
+            <button type="submit" class="btn" style="width: 100%;">✅ Зарегистрироваться</button>
+        </form>
+        
+        <hr style="margin: 20px 0;" />
+        
+        <div style="text-align: center;">
+            <p>Уже есть аккаунт? <a href="/Account/Login">🔐 Войти</a></p>
+        </div>
+    </div>
+</div>
