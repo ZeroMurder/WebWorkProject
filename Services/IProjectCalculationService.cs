@@ -1,6 +1,6 @@
-using WebWork.Models;
+using WebWorkNew.Models;
 
-namespace WebWork.Services;
+namespace WebWorkNew.Services;
 
 public interface IProjectCalculationService
 {

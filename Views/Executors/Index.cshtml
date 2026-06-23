@@ -1,4 +1,4 @@
-@model IEnumerable<WebWork.Models.Executor>
+@model IEnumerable<WebWorkNew.Models.Executor>
 
 @{
     ViewData["Title"] = "Реестр исполнителей";
@@ -34,8 +34,8 @@
             <td>@x.Unit</td>
             <td>@x.CostPerUnit</td>
             <td>
-                <a class="btn secondary" href="/Executors/Edit/@x.Id">✏️ Edit</a>
-                <a class="btn secondary" href="/Executors/Delete/@x.Id">🗑️ Delete</a>
+                <a class="btn secondary" href="/Executors/Edit/@x.Id">Edit</a>
+                <a class="btn secondary" href="/Executors/Delete/@x.Id">Delete</a>
             </td>
         </tr>
     }

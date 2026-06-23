@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebWork.Data;
-using WebWork.Models;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
 
-namespace WebWork.Controllers;
+namespace WebWorkNew.Controllers;
 
 [Authorize(Roles = "HR")]
 public class ExecutorsController : Controller
@@ -32,7 +32,9 @@ public class ExecutorsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Executor model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) 
+        return View(model);
+        TempData["Success"] = "Строка успешно сработала на строке 35 условие !ModelState.IsValid  возвращение в View Model  сработало в Create в ExecutorsController";
 
         _db.Executors.Add(model);
         await _db.SaveChangesAsync();

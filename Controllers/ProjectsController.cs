@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebWork.Data;
-using WebWork.Models;
-using WebWork.Services;
-using WebWork.Enums;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using WebWorkNew.Services;
+using WebWorkNew.Enums;
+using X.PagedList;
 
-namespace WebWork.Controllers;
+namespace WebWorkNew.Controllers;
 
-// [Authorize(Roles = "GlobalAdmin,CommercialDirector")]
 [Authorize]
 public class ProjectsController : Controller
 {
@@ -21,29 +21,48 @@ public class ProjectsController : Controller
         _calc = calc;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? search, int? page, int pageSize = 10)
     {
-        var projects = await _db.Projects
+        var query = _db.Projects
             .Include(p => p.Customer)
-            .ToListAsync();
-        return View(projects);
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(p =>
+                p.Title.Contains(search) ||
+                (p.Description != null && p.Description.Contains(search)) ||
+                (p.Customer != null && p.Customer.FullName.Contains(search)));
+
+            ViewBag.CurrentSearch = search;
+        }
+
+        query = query.OrderByDescending(p => p.Id);
+
+        var pageNumber = page ?? 1;
+        var paged = await query.ToPagedListAsync(pageNumber, pageSize);
+
+        ViewBag.CurrentPageSize = pageSize;
+        return View(paged);
     }
 
+
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(int? workspaceId)
     {
         ViewBag.Customers = await _db.Customers.ToListAsync();
         return View(new Project
         {
             StartDate = DateTime.Today,
             EndDate = DateTime.Today.AddDays(30),
-            TaxRate = 20
+            TaxRate = 20,
+            WorkspaceId = workspaceId
         });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Project model)
+    public async Task<IActionResult> Create([FromForm] Project model)
     {
         if (!ModelState.IsValid)
         {
@@ -51,12 +70,57 @@ public class ProjectsController : Controller
             return View(model);
         }
 
+        // Подстрахуемся от ситуаций, когда Date/Number не распарсились binder'ом.
+        // В этом проекте даты приходят из <input type="date">, а парсинг DateTime может зависеть от культуры.
+        // Важно: не добавляем ошибок в ModelState, чтобы не ломать сохранение.
+        if (model.StartDate == default)
+        {
+            var postedStart = Request?.Form["StartDate"].ToString();
+            if (!string.IsNullOrWhiteSpace(postedStart) && DateTime.TryParseExact(
+                    postedStart,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var parsedStart))
+            {
+                model.StartDate = parsedStart;
+            }
+        }
+
+        if (model.EndDate == default)
+        {
+            var postedEnd = Request?.Form["EndDate"].ToString();
+            if (!string.IsNullOrWhiteSpace(postedEnd) && DateTime.TryParseExact(
+                    postedEnd,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var parsedEnd))
+            {
+                model.EndDate = parsedEnd;
+            }
+        }
+
+
+        // TaxRate/Status берём как пришли binder'ом (если они не распарсились — это уже отражено в ModelState).
+
         _db.Projects.Add(model);
+
         await _db.SaveChangesAsync();
 
-        await _calc.RecalculateAsync(model);
+        // Важно: повторно загружаем проект из БД (с Customer), чтобы гарантировать корректные данные для списка проектов
+        var loadedProject = await _db.Projects
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+        if (loadedProject == null)
+            return NotFound();
+
+        await _calc.RecalculateAsync(loadedProject);
         await _db.SaveChangesAsync();
 
+
+        // После создания возвращаем на страницу списка проектов
         return RedirectToAction(nameof(Index));
     }
 
@@ -113,6 +177,22 @@ public class ProjectsController : Controller
         if (project == null) return NotFound();
         return View(project);
     }
+    [HttpGet]
+    public async Task<IActionResult> Calculation(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project == null) return NotFound();
+        
+        // Пересчитываем для актуальности
+        await _calc.RecalculateAsync(project);
+        await _db.SaveChangesAsync();
+        
+        return View(project);
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -136,16 +216,24 @@ public class ProjectsController : Controller
     {
         var project = await _db.Projects
             .Include(p => p.Resources)
+                .ThenInclude(r => r.Employee)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Executor)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Subcontractor)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Equipment)
             .Include(p => p.Customer)
             .FirstOrDefaultAsync(p => p.Id == id);
-            
+
         if (project == null) return NotFound();
-        
+
+        ViewBag.CanEditMargin = User.IsInRole("CommercialDirector") || User.IsInRole("GlobalAdmin");
         ViewBag.Employees = await _db.Employees.ToListAsync();
         ViewBag.Executors = await _db.Executors.ToListAsync();
         ViewBag.Subcontractors = await _db.Subcontractors.ToListAsync();
         ViewBag.Equipments = await _db.Equipments.ToListAsync();
-        
+
         return View(project);
     }
 
@@ -157,7 +245,9 @@ public class ProjectsController : Controller
             .Include(p => p.Resources)
             .FirstOrDefaultAsync(p => p.Id == projectId);
             
-        if (project == null) return NotFound();
+        if (project == null) 
+        return NotFound();
+
 
         resource.ProjectId = projectId;
         resource.StartDate = project.StartDate;

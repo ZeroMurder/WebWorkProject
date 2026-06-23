@@ -1,0 +1,103 @@
+@model List<WebWorkNew.Models.ApplicationUser>
+@{
+    var workspace = ViewBag.Workspace as WebWorkNew.Models.Workspace;
+    var workspaceUsers = ViewBag.WorkspaceUsers as Dictionary<string, WebWorkNew.Models.WorkspaceUser>;
+    ViewData["Title"] = $"Управление доступом - {workspace?.Name}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>👥 Управление доступом: @workspace?.Name</h2>
+        <a href="/Workspaces/Details/@workspace?.Id" class="btn-secondary">← Назад</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Добавить пользователя</h3>
+    <form asp-action="AddUser" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="workspaceId" value="@workspace?.Id" />
+        
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; align-items: end;">
+            <div class="field" style="margin: 0;">
+                <label>Пользователь</label>
+                <select name="userId" class="form-control" required>
+                    <option value="">-- Выберите пользователя --</option>
+                    @foreach (var user in Model)
+                    {
+                        var isAlreadyAdded = workspaceUsers?.ContainsKey(user.Id) == true;
+                        if (!isAlreadyAdded)
+                        {
+                            <option value="@user.Id">@user.LastName @user.FirstName (@user.Email)</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="field" style="margin: 0;">
+                <label>
+                    <input type="checkbox" name="canView" value="true" checked /> Просмотр
+                </label>
+            </div>
+            <div class="field" style="margin: 0;">
+                <label>
+                    <input type="checkbox" name="canEditProjects" value="true" /> Редактирование проектов
+                </label>
+            </div>
+            <div class="field" style="margin: 0;">
+                <label>
+                    <input type="checkbox" name="canManageWorkspace" value="true" /> Управление областью
+                </label>
+            </div>
+            <div>
+                <button type="submit" class="btn">➕ Добавить</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Текущие пользователи</h3>
+    @if (workspaceUsers == null || !workspaceUsers.Any())
+    {
+        <p style="color: #666;">Нет добавленных пользователей</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Пользователь</th>
+                    <th>Email</th>
+                    <th>Должность</th>
+                    <th>Права</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var wu in workspaceUsers)
+                {
+                    var user = Model.FirstOrDefault(u => u.Id == wu.Key);
+                    <tr>
+                        <td>@user?.LastName @user?.FirstName</td>
+                        <td>@user?.Email</td>
+                        <td>@user?.Position</td>
+                        <td>
+                            @if (wu.Value.CanView) { <span>👁️ Просмотр </span> }
+                            @if (wu.Value.CanEditProjects) { <span>✏️ Редактирование </span> }
+                            @if (wu.Value.CanManageWorkspace) { <span>⚙️ Управление</span> }
+                        </td>
+                        <td>
+                            <form asp-action="RemoveUser" method="post" style="display: inline;" onsubmit="return confirm('Удалить пользователя?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="workspaceId" value="@workspace?.Id" />
+                                <input type="hidden" name="userId" value="@wu.Key" />
+                                <button type="submit" class="btn-secondary" style="background:#dc3545; padding: 4px 8px;">🗑️ Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

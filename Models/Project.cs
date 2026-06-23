@@ -1,4 +1,4 @@
-namespace WebWork.Models;
+namespace WebWorkNew.Models;
 
 public class Project
 {
@@ -16,4 +16,20 @@ public class Project
     public decimal NetProfit { get; set; }
 
     public List<ProjectResource> Resources { get; set; } = new();
+    
+    // Привязка к рабочей области
+    public int? WorkspaceId { get; set; }
+    public Workspace? Workspace { get; set; }
+    
+    // Статус проекта
+    public ProjectStatus Status { get; set; } = ProjectStatus.Draft;
+}
+
+public enum ProjectStatus
+{
+    Draft,      // Черновик
+    Active,     // Активный
+    Paused,     // Приостановлен
+    Completed,  // Завершен
+    Cancelled   // Отменен
 }

@@ -1,0 +1,5102 @@
+PROJECT EXPORT: WebWorkNew
+Date: 2026-06-23 12:46:20
+MODELS
+
+================================================================================
+FILE: Models\ApplicationUser.cs
+================================================================================
+
+using Microsoft.AspNetCore.Identity;
+
+namespace WebWorkNew.Models;
+
+public class ApplicationUser : IdentityUser
+{
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string? MiddleName { get; set; }
+    public string? Position { get; set; }
+}
+
+================================================================================
+FILE: Models\CompanySettings.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class CompanySettings
+{
+    public int Id { get; set; }
+    public string CompanyName { get; set; } = "";
+    public string DirectorFullName { get; set; } = "";
+    public string DirectorPosition { get; set; } = "";
+    public string? LogoPath { get; set; }
+    public string? Phone { get; set; }
+    public string? Email { get; set; }
+}
+
+================================================================================
+FILE: Models\Customer.cs
+================================================================================
+
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class Customer
+{
+    public int Id { get; set; }
+    public string Inn { get; set; } = "";
+    public CustomerType Type { get; set; }
+    public string? Name { get; set; }
+    public string FullName { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Phone { get; set; } = "";
+}
+
+================================================================================
+FILE: Models\Employee.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class Employee
+{
+    public int Id { get; set; }
+    public string Surname { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string? Patronymic { get; set; }
+    public string Position { get; set; } = "";
+    public decimal MonthlySalary { get; set; }
+    public decimal TaxRate { get; set; }
+
+    public decimal CalculateCost(int workingDaysInMonth, int workedDays)
+    {
+        if (workingDaysInMonth <= 0) return 0;
+        var dayRate = (MonthlySalary + MonthlySalary * TaxRate / 100m) / workingDaysInMonth;
+        return dayRate * workedDays;
+    }
+}
+
+================================================================================
+FILE: Models\Equipment.cs
+================================================================================
+
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class Equipment
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = "";
+    public string? Description { get; set; }
+    public EquipmentAcquisitionType AcquisitionType { get; set; }
+    public decimal? OperationalCost { get; set; }
+    public TimeUnit Unit { get; set; }
+    public decimal CostPerUnit { get; set; }
+
+    public decimal CalculateCost(decimal units) => units * CostPerUnit;
+}
+
+================================================================================
+FILE: Models\Executor.cs
+================================================================================
+
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class Executor
+{
+    public int Id { get; set; }
+    public string Surname { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string? Patronymic { get; set; }
+    
+    public string FullName => $"{Surname} {Name} {Patronymic}".Trim();
+    
+    public EmploymentType EmploymentType { get; set; }
+    public decimal TaxRate { get; set; }
+    public TimeUnit Unit { get; set; }
+    public decimal CostPerUnit { get; set; }
+
+    // Базовый метод (использует TaxRate из модели)
+    public decimal CalculateCost(decimal units)
+    {
+        var baseCost = units * CostPerUnit;
+        return baseCost + baseCost * TaxRate / 100m;
+    }
+
+    // Перегрузка с параметром taxRate (для НПД)
+    public decimal CalculateCost(decimal units, decimal taxRate)
+    {
+        var baseCost = units * CostPerUnit;
+        return baseCost + baseCost * taxRate / 100m;
+    }
+}
+
+================================================================================
+FILE: Models\Holiday.cs
+================================================================================
+
+// Models/Holiday.cs
+
+namespace WebWorkNew.Models;
+
+public class Holiday
+{
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public string? Name { get; set; }
+    public int Year { get; set; }
+    
+    public Holiday() { }
+    
+    public Holiday(DateTime date, string? name = null)
+    {
+        Date = date;
+        Name = name;
+        Year = date.Year;
+    }
+}
+
+================================================================================
+FILE: Models\Project.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class Project
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = "";
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public string? Description { get; set; }
+    public int? CustomerId { get; set; }
+    public Customer? Customer { get; set; }
+    public decimal TaxRate { get; set; }
+
+    public decimal TotalCostWithoutMargin { get; set; }
+    public decimal TotalCostWithMargin { get; set; }
+    public decimal NetProfit { get; set; }
+
+    public List<ProjectResource> Resources { get; set; } = new();
+    
+    // Привязка к рабочей области
+    public int? WorkspaceId { get; set; }
+    public Workspace? Workspace { get; set; }
+    
+    // Статус проекта
+    public ProjectStatus Status { get; set; } = ProjectStatus.Draft;
+}
+
+public enum ProjectStatus
+{
+    Draft,      // Черновик
+    Active,     // Активный
+    Paused,     // Приостановлен
+    Completed,  // Завершен
+    Cancelled   // Отменен
+}
+
+================================================================================
+FILE: Models\ProjectResource.cs
+================================================================================
+
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class ProjectResource
+{
+    public int Id { get; set; }
+    public int ProjectId { get; set; }
+    public Project? Project { get; set; }
+
+    public string ResourceName { get; set; } = "";
+    public ResourceType Type { get; set; }
+
+    public int? EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+
+    public int? ExecutorId { get; set; }
+    public Executor? Executor { get; set; }
+
+    public int? SubcontractorId { get; set; }
+    public Subcontractor? Subcontractor { get; set; }
+
+    public int? EquipmentId { get; set; }
+    public Equipment? Equipment { get; set; }
+
+    public string? ServiceName { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+
+    public decimal UnitsCount { get; set; }
+    public decimal CostPrice { get; set; }
+    public decimal MarginPercent { get; set; }
+    public decimal FinalCost { get; set; }
+}
+
+================================================================================
+FILE: Models\Service.cs
+================================================================================
+
+using System.ComponentModel.DataAnnotations;
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class Service
+{
+    public int Id { get; set; }
+    
+    [Required(ErrorMessage = "Введите название услуги")]
+    [Display(Name = "Название услуги")]
+    public string Name { get; set; } = "";
+    
+    [Display(Name = "Описание")]
+    public string? Description { get; set; }
+    
+    [Display(Name = "Тип ресурса")]
+    public ResourceType ResourceType { get; set; }
+    
+    // Связи с ресурсами
+    public int? EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    
+    public int? ExecutorId { get; set; }
+    public Executor? Executor { get; set; }
+    
+    public int? SubcontractorId { get; set; }
+    public Subcontractor? Subcontractor { get; set; }
+    
+    public int? EquipmentId { get; set; }
+    public Equipment? Equipment { get; set; }
+    
+    [Display(Name = "Единица измерения")]
+    public TimeUnit Unit { get; set; }
+    
+    [Display(Name = "Стоимость за единицу")]
+    [DataType(DataType.Currency)]
+    public decimal CostPerUnit { get; set; }
+    
+    [Display(Name = "Налоговая ставка (%)")]
+    public decimal TaxRate { get; set; }
+    
+    [Display(Name = "Активно")]
+    public bool IsActive { get; set; } = true;
+    
+    [Display(Name = "Стандартная маржинальность (%)")]
+    public decimal DefaultMarginPercent { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+}
+
+================================================================================
+FILE: Models\Settings.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class Settings
+{
+    public int Id { get; set; }
+    public string Key { get; set; } = "";
+    public string Value { get; set; } = "";
+}
+
+================================================================================
+FILE: Models\Subcontractor.cs
+================================================================================
+
+// Models/Subcontractor.cs
+
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
+
+public class Subcontractor
+{
+    public int Id { get; set; }
+    public string Inn { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string ContactName { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Phone { get; set; } = "";
+    public TimeUnit Unit { get; set; }
+    public decimal CostPerUnit { get; set; }
+    public decimal TaxRate { get; set; }
+
+    public decimal CalculateCost(decimal units)
+    {
+        var baseCost = units * CostPerUnit;
+        return baseCost + baseCost * TaxRate / 100m;
+    }
+
+    // ДОБАВЛЯЕМ ПЕРЕГРУЗКУ С ПАРАМЕТРОМ taxRate (на случай, если понадобится)
+    public decimal CalculateCost(decimal units, decimal taxRate)
+    {
+        var baseCost = units * CostPerUnit;
+        return baseCost + baseCost * taxRate / 100m;
+    }
+}
+
+================================================================================
+FILE: Models\TechnicalTask.cs
+================================================================================
+
+using System.ComponentModel.DataAnnotations;
+
+namespace WebWorkNew.Models;
+
+public class TechnicalTask
+{
+    public int Id { get; set; }
+    
+    public int ProjectId { get; set; }
+    public Project? Project { get; set; }
+    
+    [Required(ErrorMessage = "Введите название ТЗ")]
+    [Display(Name = "Название технического задания")]
+    public string Title { get; set; } = "";
+    
+    [Display(Name = "Версия")]
+    public string Version { get; set; } = "1.0";
+    
+    [Display(Name = "Цели и задачи")]
+    public string Goals { get; set; } = "";
+    
+    [Display(Name = "Функциональные требования")]
+    public string FunctionalRequirements { get; set; } = "";
+    
+    [Display(Name = "Нефункциональные требования")]
+    public string NonFunctionalRequirements { get; set; } = "";
+    
+    [Display(Name = "Состав системы")]
+    public string SystemComposition { get; set; } = "";
+    
+    [Display(Name = "Технологический стек")]
+    public string TechStack { get; set; } = "";
+    
+    [Display(Name = "Требования к интерфейсу")]
+    public string UiRequirements { get; set; } = "";
+    
+    [Display(Name = "Состав документации")]
+    public string Documentation { get; set; } = "";
+    
+    [Display(Name = "Примечания")]
+    public string? Notes { get; set; }
+    
+    [Display(Name = "Дата создания")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    
+    [Display(Name = "Дата обновления")]
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    
+    [Display(Name = "Статус")]
+    public TechnicalTaskStatus Status { get; set; } = TechnicalTaskStatus.Draft;
+}
+
+public enum TechnicalTaskStatus
+{
+    [Display(Name = "Черновик")]
+    Draft,
+    
+    [Display(Name = "На согласовании")]
+    UnderReview,
+    
+    [Display(Name = "Согласовано")]
+    Approved,
+    
+    [Display(Name = "В работе")]
+    InProgress,
+    
+    [Display(Name = "Завершено")]
+    Completed
+}
+
+================================================================================
+FILE: Models\UserAuditLog.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class UserAuditLog
+{
+    public int Id { get; set; }
+
+    public string UserId { get; set; } = string.Empty;
+    public string UserEmail { get; set; } = string.Empty;
+
+    public string Action { get; set; } = string.Empty; // e.g. Register, AvatarUpload, ProfileUpdated, Snapshot10m
+    public string Entity { get; set; } = string.Empty; // e.g. User, Profile, Avatar
+    public int? EntityId { get; set; }
+
+    public string? OldValue { get; set; }
+    public string? NewValue { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}
+
+
+
+================================================================================
+FILE: Models\UserAvatar.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class UserAvatar
+{
+    public int Id { get; set; }
+    public string UserId { get; set; } = string.Empty;
+    public string AvatarPath { get; set; } = string.Empty;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public ApplicationUser? User { get; set; }
+}
+
+
+
+================================================================================
+FILE: Models\Workspace.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class Workspace
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public string Subdomain { get; set; } = "";   // например, "workspace1"
+    public string? AdminUserId { get; set; }      // ID пользователя-администратора рабочей области
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public List<WorkspaceUser> Users { get; set; } = new();
+}
+
+================================================================================
+FILE: Models\WorkspaceUser.cs
+================================================================================
+
+namespace WebWorkNew.Models;
+
+public class WorkspaceUser
+{
+    public int Id { get; set; }
+    // public int Admin { get; set; }   // ← УДАЛИТЬ
+    public int WorkspaceId { get; set; }
+    public Workspace? Workspace { get; set; }
+    public string UserId { get; set; } = "";
+    public ApplicationUser? User { get; set; }
+    public bool CanView { get; set; } = true;
+    public bool CanEditProjects { get; set; } = false;
+    public bool CanManageWorkspace { get; set; } = false;
+}
+CONTROLLERS
+
+================================================================================
+FILE: Controllers\AccountController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+public class AccountController : Controller
+{
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+    {
+        _signInManager = signInManager;
+        _userManager = userManager;
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewBag.ReturnUrl = returnUrl ?? "/Projects";
+        return View();
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(string username, string password, bool rememberMe = false, string? returnUrl = null)
+    {
+        returnUrl ??= "/Projects";
+
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            ModelState.AddModelError(string.Empty, "Введите логин и пароль");
+            return View();
+        }
+
+
+        // Поиск пользователя по email или username
+        var user = await _userManager.FindByEmailAsync(username) ??
+                   await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
+            return View();
+        }
+
+
+        var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
+
+        if (result.Succeeded)
+        {
+            return LocalRedirect(returnUrl);
+        }
+
+
+        ViewBag.ReturnUrl = returnUrl;
+        ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
+        return View();
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Logout()
+{
+    await _signInManager.SignOutAsync();
+    return RedirectToAction(nameof(Login));
+}
+}
+
+================================================================================
+FILE: Controllers\AdminUsersController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "GlobalAdmin")]
+public class AdminUsersController : Controller
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly AppDbContext _db;
+
+    public AdminUsersController(
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        AppDbContext db)
+    {
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _db = db;
+    }
+
+    // GET: AdminUsers
+    public async Task<IActionResult> Index()
+    {
+        var users = await _userManager.Users.ToListAsync();
+        var userRolesMap = new Dictionary<string, IList<string>>();
+        
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            userRolesMap[user.Id] = roles;
+        }
+        
+        ViewBag.UserRoles = userRolesMap;
+        return View(users);
+    }
+
+    // GET: AdminUsers/Create
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+        ViewBag.Workspaces = await _db.Workspaces.ToListAsync();
+        return View(new CreateUserViewModel());
+    }
+
+    // POST: AdminUsers/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateUserViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Workspaces = await _db.Workspaces.ToListAsync();
+            return View(model);
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            MiddleName = model.MiddleName,
+            Position = model.Position,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+        
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Workspaces = await _db.Workspaces.ToListAsync();
+            return View(model);
+        }
+
+        // Назначаем роль
+        if (!string.IsNullOrWhiteSpace(model.Role))
+        {
+            await _userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        // Назначаем рабочие области
+        if (model.WorkspaceIds != null && model.WorkspaceIds.Any())
+        {
+            foreach (var workspaceId in model.WorkspaceIds)
+            {
+                var workspaceUser = new WorkspaceUser
+                {
+                    WorkspaceId = workspaceId,
+                    UserId = user.Id,
+                    CanView = true,
+                    CanEditProjects = model.WorkspacePermissions.ContainsKey(workspaceId) && model.WorkspacePermissions[workspaceId].CanEdit,
+                    CanManageWorkspace = model.WorkspacePermissions.ContainsKey(workspaceId) && model.WorkspacePermissions[workspaceId].CanManage
+                };
+                _db.WorkspaceUsers.Add(workspaceUser);
+            }
+            await _db.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    // GET: AdminUsers/Edit/5
+    public async Task<IActionResult> Edit(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var currentRole = roles.FirstOrDefault() ?? "";
+        
+        var allRoles = await _roleManager.Roles.ToListAsync();
+        var allWorkspaces = await _db.Workspaces.ToListAsync();
+        
+        var userWorkspaces = await _db.WorkspaceUsers
+            .Where(wu => wu.UserId == user.Id)
+            .ToDictionaryAsync(wu => wu.WorkspaceId);
+
+        var model = new EditUserViewModel
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            MiddleName = user.MiddleName,
+            Email = user.Email ?? "",
+            Position = user.Position ?? "",
+            Role = currentRole,
+            WorkspaceIds = userWorkspaces.Keys.ToList(),
+            WorkspacePermissions = userWorkspaces.ToDictionary(
+                kvp => kvp.Key,
+                kvp => new WorkspacePermissionViewModel
+                {
+                    CanEdit = kvp.Value.CanEditProjects,
+                    CanManage = kvp.Value.CanManageWorkspace
+                }
+            )
+        };
+
+        ViewBag.Roles = allRoles;
+        ViewBag.Workspaces = allWorkspaces;
+        
+        return View(model);
+    }
+
+    // POST: AdminUsers/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(string id, EditUserViewModel model)
+    {
+        if (id != model.Id) return NotFound();
+        
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Workspaces = await _db.Workspaces.ToListAsync();
+            return View(model);
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.MiddleName = model.MiddleName;
+        user.Email = model.Email;
+        user.UserName = model.Email;
+        user.Position = model.Position;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        
+        if (!updateResult.Succeeded)
+        {
+            foreach (var error in updateResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            ViewBag.Roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Workspaces = await _db.Workspaces.ToListAsync();
+            return View(model);
+        }
+
+        // Обновляем роль
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        if (!string.IsNullOrWhiteSpace(model.Role))
+        {
+            await _userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        // Обновляем рабочие области
+        var existingWorkspaceUsers = await _db.WorkspaceUsers
+            .Where(wu => wu.UserId == user.Id)
+            .ToListAsync();
+            
+        _db.WorkspaceUsers.RemoveRange(existingWorkspaceUsers);
+        
+        if (model.WorkspaceIds != null && model.WorkspaceIds.Any())
+        {
+            foreach (var workspaceId in model.WorkspaceIds)
+            {
+                var workspaceUser = new WorkspaceUser
+                {
+                    WorkspaceId = workspaceId,
+                    UserId = user.Id,
+                    CanView = true,
+                    CanEditProjects = model.WorkspacePermissions.ContainsKey(workspaceId) && model.WorkspacePermissions[workspaceId].CanEdit,
+                    CanManageWorkspace = model.WorkspacePermissions.ContainsKey(workspaceId) && model.WorkspacePermissions[workspaceId].CanManage
+                };
+                _db.WorkspaceUsers.Add(workspaceUser);
+            }
+        }
+        
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    // POST: AdminUsers/Delete/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user != null)
+        {
+            // Удаляем связи с рабочими областями
+            var workspaceUsers = await _db.WorkspaceUsers
+                .Where(wu => wu.UserId == user.Id)
+                .ToListAsync();
+            _db.WorkspaceUsers.RemoveRange(workspaceUsers);
+            
+            await _db.SaveChangesAsync();
+            await _userManager.DeleteAsync(user);
+        }
+        
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+// ViewModels для AdminUsers
+public class CreateUserViewModel
+{
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string? MiddleName { get; set; }
+    public string Position { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Password { get; set; } = "";
+    public string? Role { get; set; }
+    public List<int>? WorkspaceIds { get; set; }
+    public Dictionary<int, WorkspacePermissionViewModel> WorkspacePermissions { get; set; } = new();
+}
+
+public class EditUserViewModel
+{
+    public string Id { get; set; } = "";
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string? MiddleName { get; set; }
+    public string Position { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string? Role { get; set; }
+    public List<int>? WorkspaceIds { get; set; }
+    public Dictionary<int, WorkspacePermissionViewModel> WorkspacePermissions { get; set; } = new();
+}
+
+public class WorkspacePermissionViewModel
+{
+    public bool CanEdit { get; set; }
+    public bool CanManage { get; set; }
+}
+
+================================================================================
+FILE: Controllers\ApiController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Enums;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ResourceController : ControllerBase
+{
+    private readonly AppDbContext _db;
+    
+    public ResourceController(AppDbContext db) => _db = db;
+    
+    [HttpGet("list")]
+    public async Task<IActionResult> GetResourceList(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Employee:
+                return Ok(await _db.Employees.Select(e => new { 
+                    id = e.Id, 
+                    name = $"{e.Surname} {e.Name}", 
+                    position = e.Position 
+                }).ToListAsync());
+            case ResourceType.Executor:
+                return Ok(await _db.Executors.Select(e => new { 
+                    id = e.Id, 
+                    name = e.FullName,
+                    unit = e.Unit.ToString(),
+                    cost = e.CostPerUnit
+                }).ToListAsync());
+            // и т.д.
+        }
+        return BadRequest();
+    }
+}
+
+================================================================================
+FILE: Controllers\CustomersController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using X.PagedList;
+
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "HR")]
+public class CustomersController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public CustomersController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index(string? search, int? page, int pageSize = 10)
+    {
+        var query = _db.Customers.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(c =>
+                (c.Inn != null && c.Inn.Contains(search)) ||
+                (c.Name != null && c.Name.Contains(search)) ||
+                c.FullName.Contains(search) ||
+                (c.Email != null && c.Email.Contains(search)) ||
+                (c.Phone != null && c.Phone.Contains(search)) ||
+                c.Type.ToString().Contains(search));
+        }
+
+        query = query.OrderByDescending(c => c.Id);
+
+        var pageNumber = page ?? 1;
+        var paged = query.ToPagedList(pageNumber, pageSize);
+
+        ViewBag.CurrentSearch = search;
+        ViewBag.CurrentPageSize = pageSize;
+
+
+        return View(paged);
+    }
+
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(new Customer());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Customer model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Customers.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Customer model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Customers.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var item = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var item = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        if (item != null)
+        {
+            _db.Customers.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\DocumentsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Services;
+
+namespace WebWorkNew.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class DocumentsController : ControllerBase
+{
+    private readonly AppDbContext _db;
+    private readonly IDocumentService _docs;
+    private readonly IExcelExportService _excel;
+
+    public DocumentsController(AppDbContext db, IDocumentService docs, IExcelExportService excel)
+    {
+        _db = db;
+        _docs = docs;
+        _excel = excel;
+    }
+
+    [HttpGet("project/{id}/commercial-offer/pdf")]
+    public async Task<IActionResult> CommercialOfferPdf(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null)
+        return NotFound();
+
+        var pdf = _docs.GenerateCommercialOfferPdf(project);
+        return File(pdf, "application/pdf", $"Коммерческое_предложение_проект_{id}.pdf");
+    }
+
+    [HttpGet("project/{id}/nma/pdf")]
+
+    public async Task<IActionResult> NmaPdf(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) return NotFound();
+
+        var pdf = _docs.GenerateNmaPdf(project);
+        return File(pdf, "application/pdf", $"НМА_проект_{id}.pdf");
+    }
+
+    [HttpGet("project/{id}/commercial-offer/excel")]
+    public async Task<IActionResult> CommercialOfferExcel(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) return NotFound();
+
+        var excel = _excel.ExportCommercialOfferToExcel(project);
+        return File(excel,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            $"Коммерческое_предложение_проект_{id}.xlsx");
+    }
+
+    [HttpGet("project/{id}/nma/excel")]
+    public async Task<IActionResult> NmaExcel(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) return NotFound();
+
+        var excel = _excel.ExportNmaToExcel(project);
+        return File(excel,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            $"НМА_проект_{id}.xlsx");
+    }
+
+    [HttpGet("project/{id}/commercial-offer/word")]
+    public async Task<IActionResult> CommercialOfferWord(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) 
+        return NotFound();
+
+        var company = await _db.CompanySettings.FirstOrDefaultAsync();
+        if (company == null) 
+        return NotFound();
+
+        var bytes = _docs.GenerateCommercialOfferWord(project);
+        return File(bytes,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            $"Коммерческое_предложение_проект_{id}.docx");
+
+
+    }
+
+    [HttpGet("project/{id}/nma/word")]
+    public async Task<IActionResult> NmaWord(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) 
+        return NotFound();
+
+        var bytes = _docs.GenerateNmaWord(project);
+        return File(bytes,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            $"НМА_проект_{id}.docx");
+
+    }
+}
+
+// WordDocFactory больше не используется (Word генерируется в DocumentService)
+
+internal static class WordDocFactory
+{
+    public static byte[] GenerateCommercialOfferDocx(Models.Project project)
+    {
+        using var ms = new MemoryStream();
+        using var doc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Create(
+            ms,
+            DocumentFormat.OpenXml.WordprocessingDocumentType.Document,
+            true);
+
+        var mainPart = doc.AddMainDocumentPart();
+        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new DocumentFormat.OpenXml.Wordprocessing.Body());
+        var body = mainPart.Document.Body;
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Проект: {project.Title}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Заказчик: {project.Customer?.FullName ?? "Не указан"}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Итог: {project.TotalCostWithMargin:N2} ₽"))));
+
+        mainPart.Document.Save();
+        return ms.ToArray();
+    }
+
+    public static byte[] GenerateNmaDocx(Models.Project project)
+    {
+        using var ms = new MemoryStream();
+        using var doc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Create(
+            ms,
+            DocumentFormat.OpenXml.WordprocessingDocumentType.Document,
+            true);
+
+        var mainPart = doc.AddMainDocumentPart();
+        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new DocumentFormat.OpenXml.Wordprocessing.Body());
+        var body = mainPart.Document.Body;
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("РАСЧЕТ СТОИМОСТИ НМА"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Проект: {project.Title}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Себестоимость: {project.TotalCostWithoutMargin:N2} ₽"))));
+
+        mainPart.Document.Save();
+        return ms.ToArray();
+    }
+}
+
+
+================================================================================
+FILE: Controllers\EmployeesController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "HR")]
+public class EmployeesController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public EmployeesController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var items = await _db.Employees.ToListAsync();
+        return View(items);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        return View(new Employee());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Employee model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Employees.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.Employees.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) 
+        return NotFound();
+                TempData["Success"] = "Строка успешно сработала на строке 48 условие edit == null в Edit в EmployeesController";
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Employee model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Employees.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var item = await _db.Employees.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) 
+        return NotFound();
+        TempData["Success"] = "Строка успешно сработала на строке 68 условие item == null в Delete в EmployeesController";
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var item = await _db.Employees.FirstOrDefaultAsync(x => x.Id == id);
+        if (item != null)
+        {
+            _db.Employees.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+        TempData["Success"] = "Строка 80 DeleteConfirmed работает в EmployeesController";
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\EquipmentsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "HR")]
+public class EquipmentsController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public EquipmentsController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var items = await _db.Equipments.ToListAsync();
+        return View(items);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        return View(new Equipment());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Equipment model)
+    {
+        if (!ModelState.IsValid) 
+        return View(model);
+        TempData["Success"] = "Строка успешно сработала на строке 35 условие что !ModelState.IsValid в Create сработало в EquipmentsController";
+
+        _db.Equipments.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.Equipments.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) 
+        return NotFound();
+        TempData["Success"] = "Строка успешно сработала на строке 46 условие что item == null в Edit сработало в EquipmentsController";
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Equipment model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+        TempData["Success"] = "Строка успешно сработала на строке 54 и 55 условия что id != model.Id и !ModelState.IsValid сработало в EquipmentsController";
+
+        _db.Equipments.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var item = await _db.Equipments.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) 
+        return NotFound();
+        TempData["Success"] = "Строка успешно сработала на строке 67 условие item == null в Delete в EquipmentsController";
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var item = await _db.Equipments.FirstOrDefaultAsync(x => x.Id == id);
+        if (item != null)
+        {
+            _db.Equipments.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+        TempData["Success"] = "Строка успешно сработала на строке 78 условие что item != null в DeleteConfirmed сработало в EquipmentsController";
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\ExecutorsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "HR")]
+public class ExecutorsController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public ExecutorsController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var items = await _db.Executors.ToListAsync();
+        return View(items);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        return View(new Executor());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Executor model)
+    {
+        if (!ModelState.IsValid) 
+        return View(model);
+        TempData["Success"] = "Строка успешно сработала на строке 35 условие !ModelState.IsValid  возвращение в View Model  сработало в Create в ExecutorsController";
+
+        _db.Executors.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.Executors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Executor model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Executors.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var item = await _db.Executors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var item = await _db.Executors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item != null)
+        {
+            _db.Executors.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\HomeController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebWorkNew.Controllers;
+
+public class HomeController : Controller
+{
+    public IActionResult Index()
+    {
+        return RedirectToAction("Index", "Projects");
+    }
+}
+
+================================================================================
+FILE: Controllers\ProfileController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize]
+public class ProfilesController : Controller
+{
+    private readonly AppDbContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public ProfilesController(AppDbContext db, UserManager<ApplicationUser> userManager)
+    {
+        _db = db;
+        _userManager = userManager;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrWhiteSpace(userId)) return RedirectToAction("Login", "Account");
+
+        var avatar = await _db.UserAvatars.FirstOrDefaultAsync(a => a.UserId == userId);
+        ViewBag.AvatarPath = avatar?.AvatarPath;
+
+        var logs = await _db.UserAuditLogs
+            .Where(l => l.UserId == userId)
+            .OrderByDescending(l => l.CreatedAt)
+            .Take(50)
+            .ToListAsync();
+        ViewBag.AuditLogs = logs;
+
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadAvatar(IFormFile avatar)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+        if (avatar == null || avatar.Length == 0)
+            return RedirectToAction(nameof(Index));
+
+        // ограничения
+        var allowedExt = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".png", ".jpg", ".jpeg", ".gif"
+        };
+
+        var ext = Path.GetExtension(avatar.FileName);
+        if (!allowedExt.Contains(ext))
+            return RedirectToAction(nameof(Index));
+
+        const long maxBytes = 2 * 1024 * 1024; // 2MB
+        if (avatar.Length > maxBytes)
+            return RedirectToAction(nameof(Index));
+
+        var avatarsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
+        Directory.CreateDirectory(avatarsDir);
+
+        var fileName = $"{userId}_{DateTime.UtcNow:yyyyMMddHHmmss}{ext}";
+        var filePath = Path.Combine(avatarsDir, fileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await avatar.CopyToAsync(stream);
+        }
+
+        var avatarPath = $"/uploads/avatars/{fileName}";
+
+        var existing = await _db.UserAvatars.FirstOrDefaultAsync(a => a.UserId == userId);
+        if (existing == null)
+        {
+            _db.UserAvatars.Add(new UserAvatar { UserId = userId, AvatarPath = avatarPath });
+        }
+        else
+        {
+            existing.AvatarPath = avatarPath;
+            existing.UpdatedAt = DateTime.UtcNow;
+        }
+
+        _db.UserAuditLogs.Add(new UserAuditLog
+        {
+            UserId = userId,
+            UserEmail = (await _userManager.FindByIdAsync(userId))?.Email ?? "",
+            Action = "AvatarUpload",
+            Entity = "UserAvatar",
+            EntityId = null,
+            OldValue = null,
+            NewValue = avatarPath,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\ProjectsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using WebWorkNew.Services;
+using WebWorkNew.Enums;
+using X.PagedList;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize]
+public class ProjectsController : Controller
+{
+    private readonly AppDbContext _db;
+    private readonly IProjectCalculationService _calc;
+
+    public ProjectsController(AppDbContext db, IProjectCalculationService calc)
+    {
+        _db = db;
+        _calc = calc;
+    }
+
+    public async Task<IActionResult> Index(string? search, int? page, int pageSize = 10)
+    {
+        var query = _db.Projects
+            .Include(p => p.Customer)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(p =>
+                p.Title.Contains(search) ||
+                (p.Description != null && p.Description.Contains(search)) ||
+                (p.Customer != null && p.Customer.FullName.Contains(search)));
+
+            ViewBag.CurrentSearch = search;
+        }
+
+        query = query.OrderByDescending(p => p.Id);
+
+        var pageNumber = page ?? 1;
+        var paged = await query.ToPagedListAsync(pageNumber, pageSize);
+
+        ViewBag.CurrentPageSize = pageSize;
+        return View(paged);
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Create(int? workspaceId)
+    {
+        ViewBag.Customers = await _db.Customers.ToListAsync();
+        return View(new Project
+        {
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today.AddDays(30),
+            TaxRate = 20,
+            WorkspaceId = workspaceId
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([FromForm] Project model)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Customers = await _db.Customers.ToListAsync();
+            return View(model);
+        }
+
+        // Подстрахуемся от ситуаций, когда Date/Number не распарсились binder'ом.
+        // В этом проекте даты приходят из <input type="date">, а парсинг DateTime может зависеть от культуры.
+        // Важно: не добавляем ошибок в ModelState, чтобы не ломать сохранение.
+        if (model.StartDate == default)
+        {
+            var postedStart = Request?.Form["StartDate"].ToString();
+            if (!string.IsNullOrWhiteSpace(postedStart) && DateTime.TryParseExact(
+                    postedStart,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var parsedStart))
+            {
+                model.StartDate = parsedStart;
+            }
+        }
+
+        if (model.EndDate == default)
+        {
+            var postedEnd = Request?.Form["EndDate"].ToString();
+            if (!string.IsNullOrWhiteSpace(postedEnd) && DateTime.TryParseExact(
+                    postedEnd,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var parsedEnd))
+            {
+                model.EndDate = parsedEnd;
+            }
+        }
+
+
+        // TaxRate/Status берём как пришли binder'ом (если они не распарсились — это уже отражено в ModelState).
+
+        _db.Projects.Add(model);
+
+        await _db.SaveChangesAsync();
+
+        // Важно: повторно загружаем проект из БД (с Customer), чтобы гарантировать корректные данные для списка проектов
+        var loadedProject = await _db.Projects
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+        if (loadedProject == null)
+            return NotFound();
+
+        await _calc.RecalculateAsync(loadedProject);
+        await _db.SaveChangesAsync();
+
+
+        // После создания возвращаем на страницу списка проектов
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project == null) return NotFound();
+        
+        ViewBag.Customers = await _db.Customers.ToListAsync();
+        return View(project);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Project model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Customers = await _db.Customers.ToListAsync();
+            return View(model);
+        }
+
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project == null) return NotFound();
+
+        project.Title = model.Title;
+        project.StartDate = model.StartDate;
+        project.EndDate = model.EndDate;
+        project.Description = model.Description;
+        project.CustomerId = model.CustomerId;
+        project.TaxRate = model.TaxRate;
+
+        await _calc.RecalculateAsync(project);
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project == null) return NotFound();
+        return View(project);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Calculation(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project == null) return NotFound();
+        
+        // Пересчитываем для актуальности
+        await _calc.RecalculateAsync(project);
+        await _db.SaveChangesAsync();
+        
+        return View(project);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == id);
+            
+        if (project != null)
+        {
+            _db.ProjectResources.RemoveRange(project.Resources);
+            _db.Projects.Remove(project);
+            await _db.SaveChangesAsync();
+        }
+        
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Resources(int id)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Employee)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Executor)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Subcontractor)
+            .Include(p => p.Resources)
+                .ThenInclude(r => r.Equipment)
+            .Include(p => p.Customer)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (project == null) return NotFound();
+
+        ViewBag.CanEditMargin = User.IsInRole("CommercialDirector") || User.IsInRole("GlobalAdmin");
+        ViewBag.Employees = await _db.Employees.ToListAsync();
+        ViewBag.Executors = await _db.Executors.ToListAsync();
+        ViewBag.Subcontractors = await _db.Subcontractors.ToListAsync();
+        ViewBag.Equipments = await _db.Equipments.ToListAsync();
+
+        return View(project);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddResource(int projectId, ProjectResource resource)
+    {
+        var project = await _db.Projects
+            .Include(p => p.Resources)
+            .FirstOrDefaultAsync(p => p.Id == projectId);
+            
+        if (project == null) 
+        return NotFound();
+
+
+        resource.ProjectId = projectId;
+        resource.StartDate = project.StartDate;
+        resource.EndDate = project.EndDate;
+
+        // Auto-fill service name if empty
+        if (string.IsNullOrWhiteSpace(resource.ServiceName))
+        {
+            resource.ServiceName = resource.Type switch
+            {
+                ResourceType.Employee when resource.EmployeeId.HasValue =>
+                    (await _db.Employees.FindAsync(resource.EmployeeId.Value))?.Position ?? "Услуга",
+                ResourceType.Executor when resource.ExecutorId.HasValue =>
+                    (await _db.Executors.FindAsync(resource.ExecutorId.Value))?.FullName ?? "Услуга",
+                ResourceType.Subcontractor when resource.SubcontractorId.HasValue =>
+                    (await _db.Subcontractors.FindAsync(resource.SubcontractorId.Value))?.Name ?? "Услуга",
+                ResourceType.Equipment when resource.EquipmentId.HasValue =>
+                    (await _db.Equipments.FindAsync(resource.EquipmentId.Value))?.Title ?? "Услуга",
+                _ => "Услуга"
+            };
+        }
+
+        if (resource.UnitsCount <= 0)
+            resource.UnitsCount = 1;
+
+        project.Resources.Add(resource);
+        await _calc.RecalculateAsync(project);
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Resources), new { id = projectId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveResource(int projectId, int resourceId)
+    {
+        var resource = await _db.ProjectResources.FindAsync(resourceId);
+        if (resource != null && resource.ProjectId == projectId)
+        {
+            _db.ProjectResources.Remove(resource);
+            
+            var project = await _db.Projects
+                .Include(p => p.Resources)
+                .FirstOrDefaultAsync(p => p.Id == projectId);
+                
+            if (project != null)
+            {
+                await _calc.RecalculateAsync(project);
+            }
+            
+            await _db.SaveChangesAsync();
+        }
+        
+        return RedirectToAction(nameof(Resources), new { id = projectId });
+    }
+
+    // API для статистики
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetStats()
+    {
+        var projects = await _db.Projects.ToListAsync();
+        var resources = await _db.ProjectResources.ToListAsync();
+        
+        var stats = new
+        {
+            projectCount = projects.Count,
+            resourceCount = resources.Count,
+            totalCost = projects.Sum(p => p.TotalCostWithMargin)
+        };
+        
+        return Ok(stats);
+    }
+}
+
+================================================================================
+FILE: Controllers\RegisterController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[AllowAnonymous]
+public class RegisterController : Controller
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly AppDbContext _db;
+
+    public RegisterController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole> roleManager,
+        AppDbContext db)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _roleManager = roleManager;
+        _db = db;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Register()
+    {
+        // ====== Mini-Captcha (2 шага) ======
+        // правила: шаг1 a+b, шаг2 step1+c. Сервер хранит только expected(step2) в Session.
+        var a = Random.Shared.Next(1, 10);
+        var b = Random.Shared.Next(1, 10);
+        var c = Random.Shared.Next(1, 10);
+        var expected = (a + b) + c;
+        HttpContext.Session.SetString("CaptchaExpected", expected.ToString());
+
+        // Убеждаемся, что роли существуют
+        string[] roles = { "GlobalAdmin", "CommercialDirector", "Accountant", "HR" };
+        foreach (var role in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
+        ViewBag.Roles = allRoles;
+        return View();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        // Убеждаемся, что роли существуют
+        string[] roles = { "GlobalAdmin", "CommercialDirector", "Accountant", "HR" };
+        foreach (var role in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
+        ViewBag.Roles = allRoles;
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // ====== Mini-Captcha (2 шага) ======
+        // Шаг 2 проверяем по ожидаемому значению, которое записали на GET.
+        var expected = HttpContext.Session.GetString("CaptchaExpected") ?? "";
+        var provided = model.CaptchaAnswer?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(expected) || !string.Equals(expected, provided, StringComparison.OrdinalIgnoreCase))
+        {
+            ModelState.AddModelError(string.Empty, "Капча неверная. Повторите попытку.");
+            ViewBag.Roles = allRoles;
+            return View(model);
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            MiddleName = model.MiddleName,
+            Position = model.Position,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (!result.Succeeded)
+        {
+            // Важно: показываем ВСЕ ошибки Identity, включая ошибки пароля.
+            foreach (var error in result.Errors)
+            {
+                // Добавляем и в ModelState (для стандартного вывода)
+                ModelState.AddModelError(string.Empty, error.Description);
+                // И дополнительно — чтобы было видно, что именно вернул Identity
+                ViewBag.IdentityErrors ??= new List<string>();
+                ViewBag.IdentityErrors.Add(error.Description);
+            }
+
+            // Диагностика: длина пароля, который реально пришёл на сервер
+            ViewBag.PasswordLength = model.Password?.Length ?? 0;
+
+            // Диагностика капчи
+            ViewBag.CaptchaExpected = HttpContext.Session.GetString("CaptchaExpected") ?? "";
+            ViewBag.CaptchaProvided = model.CaptchaAnswer ?? "";
+
+            return View(model);
+        }
+
+
+        // Назначаем роль
+        var allowedRoles = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "HR",
+            "Accountant"
+        };
+
+        if (!string.IsNullOrWhiteSpace(model.Role) && 
+            await _roleManager.RoleExistsAsync(model.Role) &&
+            allowedRoles.Contains(model.Role))
+        {
+            await _userManager.AddToRoleAsync(user, model.Role);
+        }
+        else
+        {
+            await _userManager.AddToRoleAsync(user, "HR");
+        }
+
+        // Аудит
+        _db.UserAuditLogs.Add(new UserAuditLog
+        {
+            UserId = user.Id,
+            UserEmail = user.Email ?? string.Empty,
+            Action = "Register",
+            Entity = "User",
+            EntityId = null,
+            OldValue = null,
+            NewValue = user.Email,
+            CreatedAt = DateTime.UtcNow
+        });
+        await _db.SaveChangesAsync();
+
+        // АВТОМАТИЧЕСКИЙ ВХОД
+        await _signInManager.SignInAsync(user, isPersistent: false);
+        await _signInManager.RefreshSignInAsync(user);
+
+        return RedirectToAction("Index", "Projects");
+    }
+}
+
+public class RegisterViewModel
+{
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string? MiddleName { get; set; }
+    public string Position { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Password { get; set; } = "";
+    public string? Role { get; set; }
+
+    // Mini-Captcha
+    public string? CaptchaAnswer { get; set; }
+}
+
+
+
+
+================================================================================
+FILE: Controllers\SettingsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize]
+public class SettingsController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public SettingsController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var settings = await _db.CompanySettings.ToListAsync();
+        return View(settings);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(new CompanySettings());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CompanySettings model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        _db.CompanySettings.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.CompanySettings.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, CompanySettings model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+
+        _db.CompanySettings.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+================================================================================
+FILE: Controllers\SubcontractorsController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize(Roles = "HR")]
+public class SubcontractorsController : Controller
+{
+    private readonly AppDbContext _db;
+
+    public SubcontractorsController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var items = await _db.Subcontractors.ToListAsync();
+        return View(items);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        return View(new Subcontractor());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Subcontractor model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Subcontractors.Add(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var item = await _db.Subcontractors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Subcontractor model)
+    {
+        if (id != model.Id) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+
+        _db.Subcontractors.Update(model);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var item = await _db.Subcontractors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null) return NotFound();
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var item = await _db.Subcontractors.FirstOrDefaultAsync(x => x.Id == id);
+        if (item != null)
+        {
+            _db.Subcontractors.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\TechnicalTasksController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using WebWorkNew.Services;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize]
+public class TechnicalTasksController : Controller
+{
+    private readonly AppDbContext _db;
+    private readonly ITechnicalTaskService _service;
+
+    public TechnicalTasksController(AppDbContext db, ITechnicalTaskService service)
+    {
+        _db = db;
+        _service = service;
+    }
+
+    [HttpGet("edit")]
+    public async Task<IActionResult> Edit(int projectId)
+
+
+    {
+        var project = await _db.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+        if (project == null) return NotFound();
+
+        var technicalTask = await _service.GetByProjectIdAsync(projectId);
+
+        ViewBag.Project = project;
+        return View(technicalTask ?? new TechnicalTask { ProjectId = projectId, Status = TechnicalTaskStatus.Draft });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int projectId, TechnicalTask model)
+    {
+        if (projectId != model.ProjectId) model.ProjectId = projectId;
+
+        if (!ModelState.IsValid)
+        {
+            var project = await _db.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+            ViewBag.Project = project;
+            return View(model);
+        }
+
+        if (!await _service.ValidateAsync(model))
+        {
+            ModelState.AddModelError("", "Некорректные данные ТЗ");
+            var project = await _db.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+            ViewBag.Project = project;
+            return View(model);
+        }
+
+        await _service.CreateOrUpdateAsync(model);
+        return RedirectToAction("Index", "TechnicalTasks");
+    }
+
+    [HttpGet("export-pdf")]
+    public async Task<IActionResult> ExportPdf(int projectId)
+
+
+    {
+        var technicalTask = await _service.GetByProjectIdAsync(projectId);
+        if (technicalTask == null) return NotFound();
+
+        // При генерации HTML/PDF сервис повторно подгружает проект по ProjectId.
+        var pdf = await _service.GeneratePdfAsync(technicalTask);
+        return File(pdf, "application/pdf", $"ТЗ_проект_{projectId}.pdf");
+    }
+
+    [AllowAnonymous]
+    [HttpGet("export-word")]
+    public async Task<IActionResult> ExportWord(int projectId)
+
+
+
+    {
+        var technicalTask = await _service.GetByProjectIdAsync(projectId);
+        if (technicalTask == null) return NotFound();
+
+        var bytes = await _service.GenerateWordAsync(technicalTask);
+        return File(bytes,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            $"ТЗ_проект_{projectId}.docx");
+    }
+}
+
+
+
+================================================================================
+FILE: Controllers\WorkspacesController.cs
+================================================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Controllers;
+
+[Authorize]
+public class WorkspacesController : Controller
+{
+    private readonly AppDbContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public WorkspacesController(AppDbContext db, UserManager<ApplicationUser> userManager)
+    {
+        _db = db;
+        _userManager = userManager;
+    }
+
+    // Список рабочих областей, доступных текущему пользователю
+    public async Task<IActionResult> Index()
+    {
+        var userId = _userManager.GetUserId(User);
+        var workspaces = await _db.Workspaces
+            .Include(w => w.Users)
+            .Where(w => w.AdminUserId == userId || w.Users.Any(u => u.UserId == userId))
+            .ToListAsync();
+        return View(workspaces);
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "GlobalAdmin")]
+    public IActionResult Create() => View(new Workspace());
+
+    [HttpPost]
+    [Authorize(Roles = "GlobalAdmin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Workspace model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        // Проверка уникальности поддомена
+        if (await _db.Workspaces.AnyAsync(w => w.Subdomain == model.Subdomain))
+        {
+            ModelState.AddModelError("Subdomain", "Этот поддомен уже занят");
+            return View(model);
+        }
+
+        model.AdminUserId = _userManager.GetUserId(User);
+        _db.Workspaces.Add(model);
+        await _db.SaveChangesAsync();
+
+        // Добавляем создателя как администратора рабочей области с полными правами
+        var workspaceUser = new WorkspaceUser
+        {
+            WorkspaceId = model.Id,
+            UserId = model.AdminUserId,
+            CanView = true,
+            CanEditProjects = true,
+            CanManageWorkspace = true
+        };
+        _db.WorkspaceUsers.Add(workspaceUser);
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var workspace = await _db.Workspaces
+            .Include(w => w.Users)
+            .ThenInclude(wu => wu.User)
+            .FirstOrDefaultAsync(w => w.Id == id);
+        if (workspace == null) return NotFound();
+
+        var userId = _userManager.GetUserId(User);
+        var userRights = workspace.Users.FirstOrDefault(u => u.UserId == userId);
+        var canEditProjects = userRights?.CanEditProjects == true || workspace.AdminUserId == userId || User.IsInRole("GlobalAdmin");
+        var canManageWorkspace = userRights?.CanManageWorkspace == true || workspace.AdminUserId == userId || User.IsInRole("GlobalAdmin");
+
+        var projects = await _db.Projects
+            .Where(p => p.WorkspaceId == id)
+            .Include(p => p.Customer)
+            .ToListAsync();
+
+        ViewBag.CanEditProjects = canEditProjects;
+        ViewBag.CanManageWorkspace = canManageWorkspace;
+        ViewBag.Projects = projects;
+        return View(workspace);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var workspace = await _db.Workspaces.FindAsync(id);
+        if (workspace == null) return NotFound();
+        if (!User.IsInRole("GlobalAdmin") && workspace.AdminUserId != _userManager.GetUserId(User))
+            return Forbid();
+        return View(workspace);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Workspace model)
+    {
+        if (id != model.Id) return NotFound();
+        var workspace = await _db.Workspaces.FindAsync(id);
+        if (workspace == null) return NotFound();
+        if (!User.IsInRole("GlobalAdmin") && workspace.AdminUserId != _userManager.GetUserId(User))
+            return Forbid();
+
+        if (workspace.Subdomain != model.Subdomain &&
+            await _db.Workspaces.AnyAsync(w => w.Subdomain == model.Subdomain && w.Id != id))
+        {
+            ModelState.AddModelError("Subdomain", "Этот поддомен уже занят");
+            return View(model);
+        }
+
+        workspace.Name = model.Name;
+        workspace.Subdomain = model.Subdomain;
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    // Управление участниками
+    [HttpGet]
+    public async Task<IActionResult> ManageUsers(int id)
+    {
+        var workspace = await _db.Workspaces.FindAsync(id);
+        if (workspace == null) return NotFound();
+        if (!User.IsInRole("GlobalAdmin") && workspace.AdminUserId != _userManager.GetUserId(User))
+            return Forbid();
+
+        var users = await _userManager.Users.ToListAsync();
+        var workspaceUsers = await _db.WorkspaceUsers
+            .Where(wu => wu.WorkspaceId == id)
+            .ToDictionaryAsync(wu => wu.UserId);
+
+        ViewBag.Workspace = workspace;
+        ViewBag.WorkspaceUsers = workspaceUsers;
+        return View(users);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddUser(int workspaceId, string userId, bool canView, bool canEditProjects, bool canManageWorkspace)
+    {
+        var workspace = await _db.Workspaces.FindAsync(workspaceId);
+        if (workspace == null) return NotFound();
+        if (!User.IsInRole("GlobalAdmin") && workspace.AdminUserId != _userManager.GetUserId(User))
+            return Forbid();
+
+        if (await _db.WorkspaceUsers.AnyAsync(wu => wu.WorkspaceId == workspaceId && wu.UserId == userId))
+        {
+            TempData["Error"] = "Пользователь уже добавлен в эту рабочую область";
+            return RedirectToAction(nameof(ManageUsers), new { id = workspaceId });
+        }
+
+        var workspaceUser = new WorkspaceUser
+        {
+            WorkspaceId = workspaceId,
+            UserId = userId,
+            CanView = canView,
+            CanEditProjects = canEditProjects,
+            CanManageWorkspace = canManageWorkspace
+        };
+        _db.WorkspaceUsers.Add(workspaceUser);
+        await _db.SaveChangesAsync();
+        return RedirectToAction(nameof(ManageUsers), new { id = workspaceId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveUser(int workspaceId, int workspaceUserId)
+    {
+        var workspace = await _db.Workspaces.FindAsync(workspaceId);
+        if (workspace == null) return NotFound();
+        if (!User.IsInRole("GlobalAdmin") && workspace.AdminUserId != _userManager.GetUserId(User))
+            return Forbid();
+
+        var wu = await _db.WorkspaceUsers.FindAsync(workspaceUserId);
+        if (wu != null && wu.WorkspaceId == workspaceId)
+        {
+            _db.WorkspaceUsers.Remove(wu);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(ManageUsers), new { id = workspaceId });
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "GlobalAdmin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var workspace = await _db.Workspaces.FindAsync(id);
+        if (workspace != null)
+        {
+            _db.Workspaces.Remove(workspace);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+}
+MDFILES
+
+================================================================================
+FILE: README_TODO_LAST.md
+================================================================================
+
+# WebWorkNew — осталось доделать до 100% по ТЗ
+
+## 1) «Просмотр расчета» (п.10 ТЗ)
+Сейчас расчёт считается и виден в экспорте документов, но нет отдельной страницы/роута «Просмотр расчета».
+
+**Нужно сделать:**
+- создать `Views/Projects/Calculation.cshtml` (или аналог)
+- создать экшен в `ProjectsController` (например `Calculation(int id)`) который показывает:
+  - себестоимость ресурсов
+  - маржинальность m и итоговую стоимость i
+  - чистую прибыль проекта
+- добавить кнопку/ссылку «Просмотр расчета» в:
+  - `Views/Workspaces/Details.cshtml`
+  - и/или `Views/Projects/Index.cshtml`
+
+## 2) Маржинальность m «видна только руководителю» (п.10)
+Сейчас `Views/Projects/Resources.cshtml` всегда показывает `MarginPercent` без проверки ролей/прав.
+
+**Нужно сделать:**
+- определить роль «руководитель» в терминах Identity (какая роль/какой claim)
+- изменить `Resources.cshtml`: скрыть `MarginPercent` и запретить ввод пользователям без прав
+- добавить server-side защиту в `ProjectsController.AddResource` и `RemoveResource` (и любые POST редактирования), чтобы только руководитель мог менять/видеть m
+
+## 3) Унификация налоговой ставки ns: доли vs проценты (п.7 ТЗ)
+В ТЗ: ns для сотрудников указан как доля (пример 0.302).
+В коде: `Employee` и `Project` применяют TaxRate как процент и делят на 100.
+
+**Нужно сделать:**
+- либо хранить TaxRate/ns как процент (и переписать ТЗ-совпадающее объяснение)
+- либо хранить как долю и убрать `/100m` во всех местах расчёта
+- после этого прогнать recalculation и экспорт документов
+
+## 4) НПД/ГПХ: правило ns=0 для НПД (п.6/7 ТЗ)
+В ТЗ: для НПД налог не добавляется.
+
+**Нужно сделать:**
+- добавить в расчёт `ProjectCalculationService` логику по `EmploymentType` исполнителя/субподрядчика:
+  - если НПД → налоговая надбавка = 0
+  - если ГПХ → применять tax
+- (при необходимости) изменить UI полей налоговой ставки, чтобы она была недоступна для НПД
+
+## 5) Word генерация 1-в-1 с ТЗ (п.11/12)
+Word DOCX сейчас генерируется и скачивается, но текст ТЗ вставляется как простой текст, структура может отличаться от строго требуемой в ТЗ.
+
+**Нужно сделать:**
+- сверить `DocumentService.GenerateCommercialOfferWord` и `GenerateNmaWord` с ТЗ:
+  - точные реквизиты (заказчик: должность руководителя, ФИО, email, название)
+  - таблица услуг КП: кол-во часов/дней, интервал, стоимость
+  - таблица ресурсов НМА: только себестоимость
+  - подпись
+- при необходимости: вынести helper’ы и добавить форматирование таблиц (границы/ширины) и разбиение по абзацам.
+
+## 6) (Опционально) Точность расчётов «по ТЗ»
+Текущая логика рабочих дней = Пн-Пт.
+Если в ТЗ требуется именно производственный календарь, нужно заменить алгоритм на календарь/таблицу рабочих дней.
+
+
+
+================================================================================
+FILE: TODO.md
+================================================================================
+
+# TODO (WebWorkNew)
+
+## Этап 4: API + ViewModels/UI динамика
+- [x] 1) Создать папку `Controllers/Api/`
+- [x] 2) Добавить `ResourceApiController.cs` (employees/executors/subcontractors/equipment + by-type)
+- [x] 3) Добавить `ProjectApiController.cs` (update-margin + summary)
+- [x] 4) Создать `wwwroot/js/resource-api.js` клиент для загрузки и обновления
+- [x] 5) Подключить `resource-api.js` в `Views/Shared/_Layout.cshtml` (или точечно в `Views/Projects/Resources.cshtml`)
+- [x] 6) Обновить `Views/Projects/Resources.cshtml`: добавить onchange для маржи через API (частично: без замены ввода ID на select)
+- [ ] 7) Прогнать сборку/запуск и проверить end-to-end (селекты + пересчет + обновление FinalCost/итогов)
+
+## Исправление: Create проекта возвращает пустые данные / несинхронизация
+- [x] 8) В `Controllers/ProjectsController.cs` добавить диагностику входных данных в POST Create (Title/StartDate/EndDate/CustomerId/TaxRate/Status)
+- [x] 9) В `Controllers/ProjectsController.cs` сделать серверную валидацию и при необходимости подставлять Title из `Request.Form`
+- [x] 10) Временно редиректить после POST Create на `Edit` вместо `Index` для проверки сохранения и загрузки данных
+- [ ] 11) После подтверждения убрать временные диагностики/редирект и вернуть нормальный редирект на `Index`
+
+
+
+
+================================================================================
+FILE: TODO2.md
+================================================================================
+
+# TODO2 (Project Create/Index correctness)
+
+- [ ] Read Program.cs to verify seeding/initialization paths that may create an extra Project.
+- [ ] Read full Controllers/ProjectsController.cs to confirm no other Project creation path.
+- [ ] Identify code path that creates Projects row with default values (Id=2, Title empty, dates 0001-01-01).
+- [ ] Fix root cause (seed or initialization) so no empty Project is inserted.
+- [ ] Clean DB and verify: Projects/Index no longer shows 01.01.0001 - 01.01.0001.
+- [ ] Re-test POST /Projects/Create (400 resolved) and verify saved StartDate/EndDate in UI.
+
+
+
+================================================================================
+FILE: �������.md
+================================================================================
+
+Система расчета стоимости IT-проекта - система расчет стоимости разработки программного обеспечения, которая позволяет исходя из введенных показателей рассчитывать 3 ключевых показателя:
+- Стоимость разработки проекта;
+- Стоимость нематериального актива (стоимость IT-решения, которое ставится на баланс, если это разработка продукта);
+- Стоимость коммерческого предложения;
+
+Основные участники системы:
+- Глобальный администратор;
+- Коммерческий директор;
+- Бухгалтер;
+- Кадровик;
+
+Участники (роли) могут быть у одного пользователя.
+
+Основные настройки системы:
+- Название компании;
+- ФИО руководителя;
+- Должность руководителя;
+- Логотип предприятия;
+- Контактный телефон;
+- Контактный email;
+
+================================================================================
+FILE: ������� ��������.md
+================================================================================
+
+Рабочая область - панель просмотра рабочей области, где можно просматривать и управлять проектами рабочей области.
+В панель рабочей области должна иметь следующий функционал:
+
+Просмотр проектов рабочей области;
+Управление участниками рабочей области;
+Просмотр проектов:
+Перечень проектов созданных в данной рабочей области.
+Основные кнопки:
+Создание/Редактирование/Удаление/
+Реквизиты в листе просмотра:
+
+Название проекта;
+Статус проекта;
+Срок выполнения проекта;
+Кнопка "Просмотр расчета";
+Просмотр КП;
+Редактирование проекта - Функции страницы - Просмотр проекта/редактирование проекта/создание;
+
+================================================================================
+FILE: ������ ����������.md
+================================================================================
+
+Реестр Заказчиков - лист (список) заказчиков в системе.
+Какие основные реквизиты должны быть:
+- ИНН Заказчика;
+- Тип Заказчика: Физическое лицо/Индивидуальный предприниматель/Юридическое лицо;
+- Название (если выбран Индивидуальный предприниматель/Юридическое лицо);
+- ФИО руководителя (для юридических лиц), для Физических просто ФИО;
+- Контактный e-mail;
+- Контактный номер телефона;
+
+Базовые функции: Создать Заказчика/Редактировать Заказчика/Удалить заказчика
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+FILE: ������ ������������ (���������� ���).md
+================================================================================
+
+Реестр Исполнителей - система добавления Исполнителей и расчетов с ними, которая используется в дальнейшем в выборе при создании проекта.
+Какие основные реквизиты должны быть:
+
+Фамилия;
+Имя;
+Отчество (необаятельно);
+Тип оформления (ГПХ/НПД);
+Расчетная налоговая ставка (если выбран НПД - 0, если ГПХ - вписывается вручную);
+Единица измерения (часы/дни/полная стоимость);
+Стоимость услуг за единицу измерения;
+Как вариант можно добавить типовые услуги, чтобы они улетали в услуги в управление проектом. В таком случае нужно чтобы каждой услуги привязывалась своя стоимость и единица измерения со стоимостью.
+В таком случае выстраивается иерархия: Исполнитель -> Услуга (стоимость и т.д.).
+То есть под каждым Исполнителем своя конкретная услуга и стоимость (некая биржа);
+
+В реестре должны быть основные функции: Добавить/Редактировать/Удалить Исполнителя).
+
+Логика расчета стоимости услуг Исполнителя - логика расчета, это формула, по которой определяется себестоимость работы данного Исполнителя для компании. То есть, когда в управлении проектом выбирают Исполнителя из реестра Исполнителей, его стоимость считается по своей формуле:
+su = ((cez * suz) + ((cez * suz) * ns))
+su - стоимость услуг
+cez - количество единиц измерения (допустим часов);
+suz - стоимость за единицу измерения;
+ns - налоговая ставка. Она будет только при ГПХ т.к. при НПД налог платит сам самозанятый.
+То есть стоимость услуг (за единицу умноженное на количество единиц) + % налога.
+
+ВАЖНО: Количество единиц выбирают в управлении проектом при планировании. Тут просто расчетная формула.
+
+================================================================================
+FILE: ������ ������������.md
+================================================================================
+
+Реестр Оборудования - система учета оборудования с ее расчетной логикой.
+Какие основные реквизиты должны быть:
+*   Название;
+*   Описание;
+*   Тип приобретения (Собственное/в аренде);
+*   Эксплуатационная стоимость (стоимость если в "Тип приобретения" выбрано "В аренде", в таком случае устанавливается минимальная стоимость при ниже которой нельзя поставить стоимость услуг);
+*   Единица измерения (часы/дни/полная стоимость);
+*   Стоимость услуг за единицу измерения;
+
+Как вариант можно добавить типовые услуги, чтобы они улетали в услуги в управление проектом. В таком случае нужно чтобы каждой услуги привязывалась своя стоимость и единица измерения со стоимостью.  
+В таком случае выстраивается иерархия: Оборудование -> Услуга (стоимость и т.д.).  
+То есть под каждым Оборудованием своя конкретная услуга и стоимость (некая биржа).
+
+В реестре должны быть основные функции: Добавить/Редактировать/Удалить Оборудование.
+
+Логика расчета стоимости услуг Оборудования - логика расчета, это формула, по которой определяется себестоимость использования данного Оборудования для компании. То есть, когда в управлении проектом выбирают Оборудование из реестра, стоимость его использования считается по своей формуле:  
+
+su = ((cez * soz))  
+su - стоимость услуг  
+cez - количество единиц измерения (допустим часов);  
+soz - стоимость за единицу измерения;  
+  
+То есть стоимость услуг (за единицу) умноженное на количество единиц.
+
+ВАЖНО: Количество единиц выбирают в управлении проектом при планировании. Тут просто расчетная формула.
+
+================================================================================
+FILE: ������ �����������.md
+================================================================================
+
+Реестр сотрудников - система добавления сотрудников и расчетов с ними, которая используется в дальнейшем в выборе при создании проекта.
+Какие основные реквизиты должны быть:
+
+Фамилия;
+Имя;
+Отчество (необаятельно);
+Должность;
+Заработная плата в месяц;
+Расчетная налоговая ставка;
+Как вариант можно добавить типовые услуги, чтобы они улетали в услуги в управление проектом.
+В реестре должны быть основные функции: Добавить/Редактировать/Удалить сотрудника).
+
+Логика расчета сотрудников - логика расчета, это формула, по которой определяется себестоимость работы данного сотрудника для компании. То есть, когда в управлении проектом выбирают сотрудника из реестра сотрудников, его стоимость считается по своей формуле:
+
+Облегченный вариант:
+sr = cwd * ((zp + (zp * ns))/cwd)
+
+sr - стоимость работы сотрудника;
+cwd - количество дней;
+zp - оклад сотрудника в месяц;
+ns - налоговая ставка (она либо 30,2 либо 7,6, лучше сделать вбиваемое поле);
+
+В таком случае мы умножаем по формуле на количество дней. Это облегченный вариант.
+
+Вот более точный вариант:
+
+sr = (cwdm1 * ((zp + (zp * ns))/cwdm1) + (cwdm3 * ((zp + (zp * ns))/cwdm3)) + (cwdm3 * ((zp + (zp * ns))/cwdm3)))
+
+sr - стоимость работы сотрудника;
+cwdm1 - количество рабочих дней (именно рабочих, без выходных, в конкретном месяце);
+zp - оклад сотрудника в месяц;
+ns - налоговая ставка (она либо 30,2 либо 7,6, лучше сделать вбиваемое поле);
+
+В чем особенность точного расчета:
+Стоимость оплаты дня в каждом месяце своя т.к. формула начисления зарплаты за день zp = (zp/crd) * crd.
+То есть: количество рабочих дней (отработанных сотрудников) умноженное на стоимость одного дня в конкретном месяце т.к. в расчет зп не входят праздники и выходные. Следовательно, зарплата рассчитывается по разным ставкам за каждый месяц. В мае стоимость дня более высокая т.к. в мае всего 19 рабочих дней. Следовательно на 100к = 100/19 * на количество отработанных дней.
+Это логика дает более четкое понимание в суммах.
+
+Следовательно при расчете мы считаем стоимость дня работы человека на количество рабочих дней из указанного в управлении проектом интервала.
+
+================================================================================
+FILE: ������ �������������� (����������� ��� � �������������� ����������������).md
+================================================================================
+
+Система расчета стоимости IT-проекта - система расчет стоимости разработки программного обеспечения, которая позволяет исходя из введенных показателей рассчитывать 3 ключевых показателя:
+- Стоимость разработки проекта;
+- Стоимость нематериального актива (стоимость IT-решения, которое ставится на баланс, если это разработка продукта);
+- Стоимость коммерческого предложения;
+
+Основные участники системы:
+- Глобальный администратор;
+- Коммерческий директор;
+- Бухгалтер;
+- Кадровик;
+
+Участники (роли) могут быть у одного пользователя.
+
+Основные настройки системы:
+- Название компании;
+- ФИО руководителя;
+- Должность руководителя;
+- Логотип предприятия;
+- Контактный телефон;
+- Контактный email;
+
+================================================================================
+FILE: �������� �������������.md
+================================================================================
+
+В системе должна быть панель создания пользователей:
+
+Создание учетной записи;
+Редактирование учетной записи;
+Удаление четной записи;
+Назначаемые поля:
+
+Фамилия;
+Имя;
+Отчество;
+Электронная почта;
+Должность;
+Роли;
+Назначенные рабочие области;
+
+================================================================================
+FILE: �������� ������� �������.md
+================================================================================
+
+Рабочая область - папка со всеми проектами, которая граничит доступ только определенным лицам.
+Она создается администратором. Ее состав также управляется администратором.
+Основные функции:
+
+Создание рабочей области;
+Редактирование рабочей области;
+Удаление рабочей области;
+Основные реквизиты:
+
+Название рабочей области;
+Название поддомена рабочей области (пример: ptm.iqnix.tech/workspace1);
+Администратор рабочей области;
+Пользователи рабочей области (Пользователь + выбор прав);
+Права:
+
+Просмотр;
+Редактирование проектов;
+
+================================================================================
+FILE: ���������� ��������.md
+================================================================================
+
+Страница управления проектом - страница редактирования (создания/просмотра - в зависимости от прав) создаваемого проекта, куда вносится вся необходимая информация.
+
+Реквизиты проекта:
+- Название;
+- Интервал выполнения;
+- Описание проекта;
+- Заказчика (не обязательно, выбор из реестра Заказчиков);
+- Техническое задание (не обязательно, переход в конструктор документа);
+- Формирование расчета НМА (нематериального актива) -  Форма стоимости НМА;
+- Формирование коммерческого предложения - горит если выбран Заказчик, - Форма Коммерческого предложения;
+- Стоимость проекта (итоговая стоимость по всем статьям расходов + налоговая ставка). Считается по формуле: isp = sp + (sp*ns), где isp - итоговая стоимость проекта c учетом налога, sp - итоговая стоимость проекта с маржинальностью, ns - указанная налоговая ставка в %;
+- Себестоимость проекта;
+- Стоимость с маржинальностью (если выбран Заказчик и она стоит в услугах);
+- Чистая прибыль (если стоит маржинальность) - сумма сумм разницы между итоговой стоимостью услуг и стоимостью маржинальности. Считается по формуле (пример): p = (i - s) + (i -s) .... - и так по каждой услуге. В данной формуле: p - чистая прибыль, i - итоговая стоимость услуги, s - себестоимость услуги;
+- Налоговая ставка - % указание пользователем - влияет на финальный расчет;
+
+Ниже в другой вкладке "Управление ресурсами проекта";
+Управление ресурсами проекта - лист (список) всех задействованных кадров (сотрудников), подрядчиков и ресурсов, которые могут быть задействованы для реализации данного проекта.
+ВАЖНО: Каждый ресурс добавляется из реестра (список ресурсов).
+
+Вид отображения в списке:
+- Название ресурса;
+- Тип ресурса;
+- Выбор исполнителя;
+- Название услуги (которую оказывает ресурс);
+- Интервал (выбор интервала времени + дата);
+- Себестоимость;
+- Маржинальность;
+- Итоговая стоимость;
+
+
+Каждый отдельно с расчетами:
+
+**Название ресурса** 
+Вписываемое в текстовое поле название, которое будет отображаться в документах (Коммерческое предложение и Стоимость нематериального актива).
+
+ **Тип ресурса**
+Тип ресурса влияет на реестр выбора, а также систему расчета в реестре:
+- Сотрудник - реестр сотрудников;
+- Исполнитель - реестр физических лиц;
+- Субподрядчик - реестр юридических лиц;
+- Оборудование - реестр оборудования;
+О расчетах каждого описано на странице реестра
+
+**Выбор исполнителя**
+Выбор объекта из реестра с возможностью поиска. В данном поле должна быть фильтрация в зависимости от того, какой  тип ресурса был выбран выше.
+
+**Себестоимость**
+Себестоимость - стоимость использования ресурса в расчете стоимость за единицу измерения умноженную на количество часов или дней (в зависимости от расчета в реестре).
+
+**Маржинальность**
+Маржинальность - % который начисляется сверху на стоимость, который отображается только руководителю.
+
+**Итоговая стоимость** - стоимость услуги с учетом маржинальности.
+Считается по формуле: i = s*m
+i - итоговая стоимость;
+s - себестоимость;
+m - % маржинальности;
+
+
+
+================================================================================
+FILE: ����� ������������� �����������.md
+================================================================================
+
+Форма Коммерческого предложения - генерируемая форма документа коммерческого предложения.
+Какие реквизиты должны быть:
+- Заказчик: Должность руководителя, ФИО, адрес электронной почты, Название Заказчика - из реестра Заказчиков;
+- Дата формирования коммерческого предложения;
+- Название документа;
+- Техническое задание (вписываемое через конструктор);
+- Итоговая стоимость разработки (с учетом маржинальности);
+- Таблица со всеми услугами и датами оказания (с учетом маржинальности, но без указания субподрядчиков и другой внутренней коммерческой информации, просто название, количество часов, интервал оказания, стоимость);
+
+В низу:
+Должность и ФИО руководителя компании из настройки.
+
+Необходим формат скачивания:
+*   PDF;
+*   EXCEL;
+*   Word;
+
+
+================================================================================
+FILE: ����� ��������� ���.md
+================================================================================
+
+Форма стоимости НМА - документ, формируемый системой на конкретный проект.
+Что он должен в себе собрать:
+
+Название проекта;
+Срок исполнения/разработки;
+Стоимость нематериального актива - итоговая стоимость без маржинальности, исключительно реальная стоимость всех затрат;
+Таблицу со всеми ресурсами и стоимостями без маржинальности;
+Этот документ - сумма всех расходов, которые выбирают в Управлении проектом, но без маржинальности т.к. стоимость нематериального актива ложится на баланс предприятия как вложения.
+Необходим формат скачивания:
+
+PDF;
+EXCEL;
+Word;
+SERVICES
+
+================================================================================
+FILE: Services\DocumentService.cs
+================================================================================
+
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using QuestPDF.Helpers;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public interface IDocumentService
+{
+    byte[] GenerateCommercialOfferPdf(Project project);
+    byte[] GenerateNmaPdf(Project project);
+
+    byte[] GenerateCommercialOfferWord(Project project);
+    byte[] GenerateNmaWord(Project project);
+}
+
+public class DocumentService : IDocumentService
+{
+    private readonly AppDbContext _db;
+
+    public DocumentService(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    private CompanySettings? GetCompanySettings()
+    {
+        // В проекте предполагаем, что настройки компании одна на систему.
+        return _db.CompanySettings.FirstOrDefault();
+    }
+
+    private WebWorkNew.Models.TechnicalTask? GetTechnicalTask(int projectId)
+    {
+        return _db.TechnicalTasks.FirstOrDefault(t => t.ProjectId == projectId);
+    }
+
+    public byte[] GenerateNmaWord(Project project)
+    {
+        var company = GetCompanySettings();
+        if (project == null) return Array.Empty<byte>();
+
+        using var ms = new MemoryStream();
+        using var doc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Create(
+            ms,
+            DocumentFormat.OpenXml.WordprocessingDocumentType.Document,
+            true);
+
+        var mainPart = doc.AddMainDocumentPart();
+        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new DocumentFormat.OpenXml.Wordprocessing.Body());
+        var body = mainPart.Document.Body;
+
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("РАСЧЕТ СТОИМОСТИ НЕМАТЕРИАЛЬНОГО АКТИВА (НМА)"))));
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Название проекта: {project.Title}"))));
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"Срок исполнения/разработки: {project.StartDate:dd.MM.yyyy} - {project.EndDate:dd.MM.yyyy}"))));
+
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"\nСтоимость НМА (итог без маржинальности): {project.TotalCostWithoutMargin:N2} ₽"))));
+
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("\nТаблица ресурсов (только себестоимость)"))));
+
+        // Таблица ресурсов
+        body.Append(GenerateNmaResourcesTable(project));
+
+        // Подпись
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Подпись"))));
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"{company?.DirectorPosition ?? "Руководитель"}"))));
+        body.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text($"{company?.DirectorFullName ?? ""}"))));
+
+        mainPart.Document.Save();
+        return ms.ToArray();
+    }
+
+    private static DocumentFormat.OpenXml.Wordprocessing.Table GenerateNmaResourcesTable(Project project)
+    {
+        var table = new DocumentFormat.OpenXml.Wordprocessing.Table();
+
+        table.AppendChild(GenerateTableRow(new[] { "Ресурс", "Интервал", "Количество", "Себестоимость" }));
+
+        foreach (var r in project.Resources)
+        {
+            var interval = $"{r.StartDate:dd.MM.yyyy} - {r.EndDate:dd.MM.yyyy}";
+            var units = r.UnitsCount.ToString();
+            var cost = r.CostPrice.ToString("N2");
+
+            table.AppendChild(GenerateTableRow(new[] { r.ResourceName ?? "", interval, units, cost }));
+        }
+
+        return table;
+    }
+
+    private static DocumentFormat.OpenXml.Wordprocessing.Table GenerateServicesTable(Project project)
+    {
+        // Мини-таблица без сложного форматирования: чтобы Word открывался и содержимое было в правильных колонках.
+        var table = new DocumentFormat.OpenXml.Wordprocessing.Table();
+
+        // Header
+        table.AppendChild(GenerateTableRow(new[] { "Название", "Количество (ед)", "Интервал оказания", "Стоимость" }));
+
+        foreach (var r in project.Resources)
+        {
+            var interval = $"{r.StartDate:dd.MM.yyyy} - {r.EndDate:dd.MM.yyyy}";
+            var units = r.UnitsCount.ToString();
+            var serviceName = r.ResourceName;
+            var cost = r.FinalCost.ToString("N2");
+
+            table.AppendChild(GenerateTableRow(new[] { serviceName, units, interval, cost }));
+        }
+
+        return table;
+    }
+
+    private static DocumentFormat.OpenXml.Wordprocessing.TableRow GenerateTableRow(string[] cells)
+    {
+        var row = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
+
+        foreach (var cell in cells)
+        {
+            var tc = new DocumentFormat.OpenXml.Wordprocessing.TableCell();
+            tc.Append(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+                new DocumentFormat.OpenXml.Wordprocessing.Run(
+                    new DocumentFormat.OpenXml.Wordprocessing.Text(cell ?? string.Empty))));
+
+            row.Append(tc);
+        }
+
+        return row;
+    }
+
+    public byte[] GenerateCommercialOfferWord(Project project)
+    {
+        var company = GetCompanySettings();
+        if (project == null) return Array.Empty<byte>();
+
+        // ТЗ: таблица услуг КП: Название, Кол-во, Интервал оказания, Стоимость
+        // Здесь делаем Word-документ с простой таблицей в 4 колонках.
+        using var ms = new MemoryStream();
+        using var doc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Create(
+            ms,
+            DocumentFormat.OpenXml.WordprocessingDocumentType.Document,
+            true);
+
+        var mainPart = doc.AddMainDocumentPart();
+        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new DocumentFormat.OpenXml.Wordprocessing.Body());
+        var body = mainPart.Document.Body;
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text("КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"Проект: {project.Title}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"Заказчик: {project.Customer?.FullName ?? "Не указан"}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"Дата формирования: {DateTime.Now:dd.MM.yyyy}"))));
+
+        // Таблица услуг
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text("\nТаблица услуг"))));
+
+        body.AppendChild(GenerateCommercialOfferServicesTableWord(project));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"\nИтоговая стоимость: {project.TotalCostWithMargin:N2} ₽"))));
+
+        // Подпись: должность и ФИО руководителя компании (из настроек системы)
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text("\nПодпись"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"{company?.DirectorPosition ?? "Руководитель"}"))));
+
+        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                new DocumentFormat.OpenXml.Wordprocessing.Text($"{company?.DirectorFullName ?? ""}"))));
+
+        mainPart.Document.Save();
+        return ms.ToArray();
+    }
+
+    private static DocumentFormat.OpenXml.Wordprocessing.Table GenerateCommercialOfferServicesTableWord(Project project)
+    {
+        var table = new DocumentFormat.OpenXml.Wordprocessing.Table();
+
+        // Header строго по ТЗ
+        table.AppendChild(GenerateTableRow(new[] { "Название", "Кол-во", "Интервал оказания", "Стоимость" }));
+
+        foreach (var r in project.Resources)
+        {
+            var interval = $"{r.StartDate:dd.MM.yyyy} - {r.EndDate:dd.MM.yyyy}";
+            var units = r.UnitsCount.ToString();
+            var name = r.ServiceName ?? r.ResourceName ?? "Услуга";
+            var cost = r.FinalCost.ToString("N2");
+
+            table.AppendChild(GenerateTableRow(new[] { name, units, interval, cost }));
+        }
+
+        return table;
+    }
+
+    public byte[] GenerateCommercialOfferPdf(Project project)
+    {
+        var company = GetCompanySettings();
+
+        return Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Margin(30);
+
+                page.Header()
+                    .AlignCenter()
+                    .Text("КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ")
+                    .FontSize(20)
+                    .Bold()
+                    .Underline();
+
+                page.Content()
+                    .PaddingVertical(20)
+                    .Column(col =>
+                    {
+                        col.Item().Text($"Заказчик: {project.Customer?.FullName ?? "Не указан"}").FontSize(12);
+                        col.Item().Text($"Компания: {project.Customer?.Name ?? "-"}").FontSize(12);
+                        col.Item().Text($"Email: {project.Customer?.Email ?? "-"}").FontSize(12);
+                        col.Item().Text($"Телефон: {project.Customer?.Phone ?? "-"}").FontSize(12);
+
+                        col.Item().PaddingTop(15).Text($"Проект: {project.Title}").FontSize(14).Bold();
+                        col.Item().Text($"Срок реализации: {project.StartDate:dd.MM.yyyy} - {project.EndDate:dd.MM.yyyy}");
+                        col.Item().Text($"Описание: {project.Description ?? "-"}");
+
+                        col.Item().PaddingTop(15).Text("Таблица услуг:")
+                            .FontSize(12)
+                            .Bold();
+
+                        col.Item().PaddingTop(8).Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(3); // Название
+                                columns.RelativeColumn(1); // Кол-во
+                                columns.RelativeColumn(2); // Интервал оказания
+                                columns.RelativeColumn(1.5f); // Стоимость
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Название").SemiBold().FontSize(10);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Кол-во").SemiBold().FontSize(10);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Интервал оказания").SemiBold().FontSize(10);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Стоимость").SemiBold().FontSize(10);
+                            });
+
+                            foreach (var r in project.Resources)
+                            {
+                                table.Cell().Text(r.ServiceName ?? r.ResourceName ?? "Услуга").FontSize(9);
+                                table.Cell().Text(r.UnitsCount.ToString()).FontSize(9);
+                                table.Cell().Text($"{r.StartDate:dd.MM.yyyy} - {r.EndDate:dd.MM.yyyy}").FontSize(9);
+                                table.Cell().AlignRight().Text($"{r.FinalCost:N2} ₽").FontSize(9);
+                            }
+                        });
+
+                        col.Item().PaddingTop(18).Row(row =>
+                        {
+                            row.RelativeItem().Text("Итоговая стоимость (с маржинальностью):").Bold();
+                            row.ConstantItem(170).AlignRight().Text($"{project.TotalCostWithMargin:N2} ₽").Bold();
+                        });
+
+                        col.Item().PaddingTop(28).Text($"Должность: {company?.DirectorPosition ?? "Руководитель"}").FontSize(10);
+                        col.Item().Text($"ФИО: {company?.DirectorFullName ?? ""}").FontSize(10);
+                        col.Item().PaddingTop(6).Text(DateTime.Now.ToString("dd.MM.yyyy")).FontSize(10);
+                    });
+
+                page.Footer()
+                    .AlignCenter()
+                    .Text("Система автоматического расчета стоимости IT-проектов")
+                    .FontSize(8);
+            });
+        }).GeneratePdf();
+    }
+
+    public byte[] GenerateNmaPdf(Project project)
+    {
+        var company = GetCompanySettings();
+
+        return Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Margin(30);
+
+                page.Header()
+                    .AlignCenter()
+                    .Text("РАСЧЕТ СТОИМОСТИ НЕМАТЕРИАЛЬНОГО АКТИВА (НМА)")
+                    .FontSize(18)
+                    .Bold();
+
+                page.Content()
+                    .PaddingVertical(20)
+                    .Column(col =>
+                    {
+                        col.Item().Text($"Проект: {project.Title}").FontSize(14).Bold();
+                        col.Item().Text($"Срок разработки: {project.StartDate:dd.MM.yyyy} - {project.EndDate:dd.MM.yyyy}");
+
+                        col.Item().PaddingTop(15).Text("Таблица ресурсов (без маржинальности):")
+                            .FontSize(12)
+                            .Bold();
+
+                        col.Item().PaddingTop(8).Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(2); // Ресурс
+                                columns.RelativeColumn(1); // Начало
+                                columns.RelativeColumn(1); // Конец
+                                columns.RelativeColumn(0.6f); // Units
+                                columns.RelativeColumn(1); // Себестоимость
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Ресурс").SemiBold().FontSize(8);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Начало").SemiBold().FontSize(8);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Конец").SemiBold().FontSize(8);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Ед.").SemiBold().FontSize(8);
+                                header.Cell().Background(Colors.Grey.Lighten2).Text("Себестоимость").SemiBold().FontSize(8);
+                            });
+
+                            foreach (var r in project.Resources)
+                            {
+                                table.Cell().Text(r.ResourceName ?? "").FontSize(8);
+                                table.Cell().Text(r.StartDate.ToString("dd.MM.yyyy")).FontSize(8);
+                                table.Cell().Text(r.EndDate.ToString("dd.MM.yyyy")).FontSize(8);
+                                table.Cell().Text(r.UnitsCount.ToString()).FontSize(8);
+                                table.Cell().AlignRight().Text($"{r.CostPrice:N2} ₽").FontSize(8);
+                            }
+                        });
+
+                        col.Item().PaddingTop(18).Row(row =>
+                        {
+                            row.RelativeItem().Text("Стоимость НМА (себестоимость):").Bold();
+                            row.ConstantItem(170).AlignRight().Text($"{project.TotalCostWithoutMargin:N2} ₽").Bold();
+                        });
+
+                        col.Item().PaddingTop(22).Text("Данный документ является основанием для постановки на баланс").FontSize(10);
+                        col.Item().PaddingTop(6).Text($"Должность: {company?.DirectorPosition ?? "Руководитель"}").FontSize(10);
+                        col.Item().Text($"ФИО: {company?.DirectorFullName ?? ""}").FontSize(10);
+                        col.Item().PaddingTop(6).Text(DateTime.Now.ToString("dd.MM.yyyy")).FontSize(10);
+                    });
+
+                page.Footer()
+                    .AlignCenter()
+                    .Text("Система расчета стоимости IT-проектов")
+                    .FontSize(8);
+            });
+        }).GeneratePdf();
+    }
+}
+
+
+
+================================================================================
+FILE: Services\ExcelExportService.cs
+================================================================================
+
+using ClosedXML.Excel;
+using System.Drawing;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public class ExcelExportService : IExcelExportService
+{
+    public ExcelExportService()
+    {
+        // ClosedXML не требует явной установки лицензии в большинстве сценариев.
+    }
+
+    public byte[] ExportProjectsToExcel(List<Project> projects)
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Проекты");
+
+        ws.Cell(1, 1).Value = "ID";
+        ws.Cell(1, 2).Value = "Название проекта";
+        ws.Cell(1, 3).Value = "Начало";
+        ws.Cell(1, 4).Value = "Окончание";
+        ws.Cell(1, 5).Value = "Заказчик";
+        ws.Cell(1, 6).Value = "Себестоимость";
+        ws.Cell(1, 7).Value = "Стоимость с маржой";
+        ws.Cell(1, 8).Value = "Чистая прибыль";
+
+        var header = ws.Range(1, 1, 1, 8);
+        header.Style.Font.Bold = true;
+        header.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+
+        for (int i = 0; i < projects.Count; i++)
+        {
+            var p = projects[i];
+            int row = i + 2;
+
+            ws.Cell(row, 1).Value = p.Id;
+            ws.Cell(row, 2).Value = p.Title;
+            ws.Cell(row, 3).Value = p.StartDate;
+            ws.Cell(row, 4).Value = p.EndDate;
+            ws.Cell(row, 5).Value = p.Customer?.Name ?? p.Customer?.FullName ?? "-";
+            ws.Cell(row, 6).Value = p.TotalCostWithoutMargin;
+            ws.Cell(row, 7).Value = p.TotalCostWithMargin;
+            ws.Cell(row, 8).Value = p.NetProfit;
+
+            ws.Cell(row, 3).Style.DateFormat.Format = "dd.MM.yyyy";
+            ws.Cell(row, 4).Style.DateFormat.Format = "dd.MM.yyyy";
+        }
+
+        ws.Columns().AdjustToContents();
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms);
+        return ms.ToArray();
+    }
+
+    public byte[] ExportResourcesToExcel(List<ProjectResource> resources)
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Ресурсы");
+
+        ws.Cell(1, 1).Value = "Название";
+        ws.Cell(1, 2).Value = "Тип";
+        ws.Cell(1, 3).Value = "Услуга";
+        ws.Cell(1, 4).Value = "Начало";
+        ws.Cell(1, 5).Value = "Конец";
+        ws.Cell(1, 6).Value = "Кол-во";
+        ws.Cell(1, 7).Value = "Себестоимость";
+        ws.Cell(1, 8).Value = "Маржа %";
+        ws.Cell(1, 9).Value = "Итоговая стоимость";
+
+        var header = ws.Range(1, 1, 1, 9);
+        header.Style.Font.Bold = true;
+        header.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+
+        for (int i = 0; i < resources.Count; i++)
+        {
+            var r = resources[i];
+            int row = i + 2;
+
+            ws.Cell(row, 1).Value = r.ResourceName;
+            ws.Cell(row, 2).Value = r.Type.ToString();
+            ws.Cell(row, 3).Value = r.ServiceName;
+            ws.Cell(row, 4).Value = r.StartDate;
+            ws.Cell(row, 5).Value = r.EndDate;
+            ws.Cell(row, 6).Value = r.UnitsCount;
+            ws.Cell(row, 7).Value = r.CostPrice;
+            ws.Cell(row, 8).Value = r.MarginPercent;
+            ws.Cell(row, 9).Value = r.FinalCost;
+
+            ws.Cell(row, 4).Style.DateFormat.Format = "dd.MM.yyyy";
+            ws.Cell(row, 5).Style.DateFormat.Format = "dd.MM.yyyy";
+        }
+
+        ws.Columns().AdjustToContents();
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms);
+        return ms.ToArray();
+    }
+
+public byte[] ExportCommercialOfferToExcel(Project project)
+{
+    using var wb = new XLWorkbook();
+    var ws = wb.Worksheets.Add("Коммерческое_предложение");
+
+    // Заголовок
+    ws.Cell(1, 1).Value = "КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ";
+    ws.Range(1, 1, 1, 4).Merge();
+    ws.Cell(1, 1).Style.Font.Bold = true;
+    ws.Cell(1, 1).Style.Font.FontSize = 16;
+
+    int row = 3;
+    
+    // Реквизиты заказчика
+    ws.Cell(row, 1).Value = "Заказчик:";
+    ws.Cell(row, 2).Value = project.Customer?.FullName ?? "-";
+    row++;
+    ws.Cell(row, 1).Value = "Компания:";
+    ws.Cell(row, 2).Value = project.Customer?.Name ?? "-";
+    row++;
+    ws.Cell(row, 1).Value = "Email:";
+    ws.Cell(row, 2).Value = project.Customer?.Email ?? "-";
+    row++;
+    ws.Cell(row, 1).Value = "Телефон:";
+    ws.Cell(row, 2).Value = project.Customer?.Phone ?? "-";
+    row += 2;
+
+    // Информация о проекте
+    ws.Cell(row, 1).Value = $"Проект: {project.Title}";
+    ws.Range(row, 1, row, 4).Merge();
+    ws.Cell(row, 1).Style.Font.Bold = true;
+    row++;
+    ws.Cell(row, 1).Value = $"Срок: {project.StartDate:dd.MM.yyyy} - {project.EndDate:dd.MM.yyyy}";
+    ws.Range(row, 1, row, 4).Merge();
+    row += 2;
+
+    // ТАБЛИЦА УСЛУГ - строго по ТЗ: Название, Кол-во, Интервал оказания, Стоимость
+    ws.Cell(row, 1).Value = "Название";
+    ws.Cell(row, 2).Value = "Кол-во";
+    ws.Cell(row, 3).Value = "Интервал оказания";
+    ws.Cell(row, 4).Value = "Стоимость";
+
+    var header = ws.Range(row, 1, row, 4);
+    header.Style.Font.Bold = true;
+    header.Style.Fill.BackgroundColor = XLColor.LightGray;
+    row++;
+
+    // Заполняем данные
+    foreach (var r in project.Resources)
+    {
+        ws.Cell(row, 1).Value = r.ServiceName ?? r.ResourceName ?? "Услуга";
+        ws.Cell(row, 2).Value = r.UnitsCount;
+        ws.Cell(row, 3).Value = $"{r.StartDate:dd.MM.yyyy} - {r.EndDate:dd.MM.yyyy}";
+        ws.Cell(row, 4).Value = r.FinalCost;
+        row++;
+    }
+
+    // ИТОГО
+    row++;
+    ws.Cell(row, 3).Value = "ИТОГО:";
+    ws.Cell(row, 4).Value = project.TotalCostWithMargin;
+    ws.Range(row, 3, row, 4).Style.Font.Bold = true;
+
+    ws.Columns().AdjustToContents();
+
+    using var ms = new MemoryStream();
+    wb.SaveAs(ms);
+    return ms.ToArray();
+}
+
+    public byte[] ExportNmaToExcel(Project project)
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("НМА");
+
+        ws.Cell(1, 1).Value = "РАСЧЕТ СТОИМОСТИ НЕМАТЕРИАЛЬНОГО АКТИВА";
+        ws.Range(1, 1, 1, 3).Merge();
+        ws.Cell(1, 1).Style.Font.Bold = true;
+        ws.Cell(1, 1).Style.Font.FontSize = 14;
+
+        int row = 3;
+        ws.Cell(row, 1).Value = $"Проект: {project.Title}";
+        ws.Range(row, 1, row, 2).Merge();
+        row++;
+        ws.Cell(row, 1).Value = $"Срок: {project.StartDate:dd.MM.yyyy} - {project.EndDate:dd.MM.yyyy}";
+        ws.Range(row, 1, row, 2).Merge();
+        row += 2;
+
+        ws.Cell(row, 1).Value = "Ресурс";
+        ws.Cell(row, 2).Value = "Начало";
+        ws.Cell(row, 3).Value = "Конец";
+        ws.Cell(row, 4).Value = "Кол-во";
+        ws.Cell(row, 5).Value = "Себестоимость";
+
+        var header = ws.Range(row, 1, row, 5);
+        header.Style.Font.Bold = true;
+        header.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+
+        row++;
+        foreach (var r in project.Resources)
+        {
+            ws.Cell(row, 1).Value = r.ResourceName;
+            ws.Cell(row, 2).Value = r.StartDate;
+            ws.Cell(row, 3).Value = r.EndDate;
+            ws.Cell(row, 4).Value = r.UnitsCount;
+            ws.Cell(row, 5).Value = r.CostPrice;
+
+            ws.Cell(row, 2).Style.DateFormat.Format = "dd.MM.yyyy";
+            ws.Cell(row, 3).Style.DateFormat.Format = "dd.MM.yyyy";
+            row++;
+        }
+
+        row++;
+        ws.Cell(row, 4).Value = "ИТОГО:";
+        ws.Cell(row, 5).Value = project.TotalCostWithoutMargin;
+        ws.Range(row, 4, row, 5).Style.Font.Bold = true;
+
+        ws.Columns().AdjustToContents();
+
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms);
+        return ms.ToArray();
+    }
+
+    public byte[] ExportWorkspaceUsersToExcel(Workspace workspace, List<WorkspaceUser> users)
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Пользователи_рабочей_области");
+
+        ws.Cell(1, 1).Value = $"Рабочая область: {workspace.Name}";
+        ws.Range(1, 1, 1, 4).Merge();
+        ws.Cell(1, 1).Style.Font.Bold = true;
+
+        ws.Cell(3, 1).Value = "Пользователь";
+        ws.Cell(3, 2).Value = "Email";
+        ws.Cell(3, 3).Value = "Должность";
+        ws.Cell(3, 4).Value = "Права";
+
+        var header = ws.Range(3, 1, 3, 4);
+        header.Style.Font.Bold = true;
+        header.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+
+        int row = 4;
+        foreach (var wu in users)
+        {
+            var rights = new List<string>();
+            if (wu.CanView) rights.Add("Просмотр");
+            if (wu.CanEditProjects) rights.Add("Редактирование проектов");
+            if (wu.CanManageWorkspace) rights.Add("Управление областью");
+
+            ws.Cell(row, 1).Value = wu.User != null ? $"{wu.User.LastName} {wu.User.FirstName}" : wu.UserId;
+            ws.Cell(row, 2).Value = wu.User?.Email;
+            ws.Cell(row, 3).Value = wu.User?.Position;
+            ws.Cell(row, 4).Value = string.Join(", ", rights);
+
+            row++;
+        }
+
+        ws.Columns().AdjustToContents();
+
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms);
+        return ms.ToArray();
+    }
+}
+
+
+
+================================================================================
+FILE: Services\IExcelExportService.cs
+================================================================================
+
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public interface IExcelExportService
+{
+    byte[] ExportProjectsToExcel(List<Project> projects);
+    byte[] ExportResourcesToExcel(List<ProjectResource> resources);
+    byte[] ExportCommercialOfferToExcel(Project project);
+    byte[] ExportNmaToExcel(Project project);
+    byte[] ExportWorkspaceUsersToExcel(Workspace workspace, List<WorkspaceUser> users);
+}
+
+================================================================================
+FILE: Services\IProjectCalculationService.cs
+================================================================================
+
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public interface IProjectCalculationService
+{
+    Task RecalculateAsync(Project project);
+}
+
+
+================================================================================
+FILE: Services\ITechnicalTaskService.cs
+================================================================================
+
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public interface ITechnicalTaskService
+{
+    Task<TechnicalTask?> GetByProjectIdAsync(int projectId);
+    Task<TechnicalTask> CreateOrUpdateAsync(TechnicalTask technicalTask);
+    Task<string> GenerateHtmlAsync(TechnicalTask technicalTask);
+    Task<byte[]> GeneratePdfAsync(TechnicalTask technicalTask);
+    Task<byte[]> GenerateWordAsync(TechnicalTask technicalTask);
+    Task<bool> ValidateAsync(TechnicalTask technicalTask);
+}
+
+================================================================================
+FILE: Services\ProfileAuditService.cs
+================================================================================
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public class ProfileAuditService
+{
+    private readonly AppDbContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public ProfileAuditService(AppDbContext db, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+    {
+        _db = db;
+        _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    private string? GetCurrentUserId() => _httpContextAccessor.HttpContext?.User?.FindFirst("sub")?.Value
+        ?? _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+    private string? GetCurrentUserEmail()
+    {
+        var email = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        if (!string.IsNullOrWhiteSpace(email)) return email;
+        return _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+    }
+
+    public async Task LogAsync(string action, string entity, int? entityId = null, string? oldValue = null, string? newValue = null)
+    {
+        var userId = GetCurrentUserId();
+        if (string.IsNullOrWhiteSpace(userId)) return;
+
+        var email = GetCurrentUserEmail();
+        email ??= (await _userManager.FindByIdAsync(userId))?.Email ?? "";
+
+        var log = new UserAuditLog
+        {
+            UserId = userId,
+            UserEmail = email,
+            Action = action,
+            Entity = entity,
+            EntityId = entityId,
+            OldValue = oldValue,
+            NewValue = newValue,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.UserAuditLogs.Add(log);
+        await _db.SaveChangesAsync();
+    }
+}
+
+
+
+================================================================================
+FILE: Services\ProjectCalculationService.cs
+================================================================================
+
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Enums;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public class ProjectCalculationService : IProjectCalculationService
+{
+    private readonly AppDbContext _db;
+
+    public ProjectCalculationService(AppDbContext db) => _db = db;
+
+    public async Task RecalculateAsync(Project project)
+    {
+        if (project == null) return;
+
+        // Reload resources if needed
+        if (project.Resources == null || !project.Resources.Any())
+        {
+            var freshProject = await _db.Projects
+                .Include(p => p.Resources)
+                .FirstOrDefaultAsync(p => p.Id == project.Id);
+            
+            if (freshProject != null && freshProject.Resources != null)
+            {
+                project.Resources = freshProject.Resources;
+            }
+        }
+
+        decimal totalBase = 0;
+        decimal totalFinal = 0;
+        decimal profit = 0;
+
+        if (project.Resources != null)
+        {
+            foreach (var r in project.Resources)
+            {
+                if (r == null) continue;
+                
+                decimal cost = await CalculateResourceCost(r);
+                
+                r.CostPrice = cost;
+                r.FinalCost = cost + cost * r.MarginPercent / 100m;
+
+                totalBase += r.CostPrice;
+                totalFinal += r.FinalCost;
+                profit += r.FinalCost - r.CostPrice;
+            }
+        }
+
+        project.TotalCostWithoutMargin = totalBase;
+        project.TotalCostWithMargin = totalFinal + totalFinal * (project.TaxRate / 100m);
+        project.NetProfit = profit;
+    }
+
+    private async Task<decimal> CalculateResourceCost(ProjectResource resource)
+    {
+        if (resource == null) return 0;
+        
+        switch (resource.Type)
+        {
+            case ResourceType.Employee when resource.EmployeeId.HasValue:
+                return await CalculateEmployeeCostExactAsync(resource);
+
+            case ResourceType.Executor when resource.ExecutorId.HasValue:
+                var ex = await _db.Executors.FindAsync(resource.ExecutorId.Value);
+                if (ex != null)
+                {
+                    // Для НПД налог не добавляется (налог платит самозанятый)
+                    decimal taxRate;
+                    if (Enum.IsDefined(typeof(EmploymentType), ex.EmploymentType) && 
+                        ex.EmploymentType == EmploymentType.NPD)
+                    {
+                        taxRate = 0m;
+                    }
+                    else
+                    {
+                        taxRate = ex.TaxRate;
+                    }
+                    return ex.CalculateCost(resource.UnitsCount, taxRate);
+                }
+                break;
+
+            case ResourceType.Subcontractor when resource.SubcontractorId.HasValue:
+                var sub = await _db.Subcontractors.FindAsync(resource.SubcontractorId.Value);
+                if (sub != null)
+                {
+                    // Субподрядчики всегда с налогом (ЮЛ/ИП)
+                    return sub.CalculateCost(resource.UnitsCount);
+                }
+                break;
+
+            case ResourceType.Equipment when resource.EquipmentId.HasValue:
+                var eq = await _db.Equipments.FindAsync(resource.EquipmentId.Value);
+                if (eq != null)
+                    return eq.CalculateCost(resource.UnitsCount);
+                break;
+        }
+        
+        return 0;
+    }
+
+    /// <summary>
+    /// Получение количества рабочих дней в периоде (Пн-Пт, исключая праздники)
+    /// </summary>
+    private int GetWorkingDaysInPeriod(DateTime start, DateTime end)
+    {
+        var days = 0;
+        // Получаем праздники для данного периода
+        var holidays = GetHolidays(start, end);
+        
+        for (var date = start.Date; date <= end.Date; date = date.AddDays(1))
+        {
+            if (IsWorkingDay(date, holidays))
+                days++;
+        }
+        return days > 0 ? days : 1;
+    }
+
+    /// <summary>
+    /// Проверка, является ли день рабочим
+    /// </summary>
+    private bool IsWorkingDay(DateTime date, HashSet<DateTime> holidays)
+    {
+        return date.DayOfWeek != DayOfWeek.Saturday && 
+               date.DayOfWeek != DayOfWeek.Sunday &&
+               !holidays.Contains(date.Date);
+    }
+
+    /// <summary>
+    /// Получение списка праздничных дней для периода
+    /// </summary>
+    private HashSet<DateTime> GetHolidays(DateTime start, DateTime end)
+    {
+        try
+        {
+            // Проверяем, существует ли таблица Holidays в БД
+            // Если нет - возвращаем пустой HashSet
+            var holidays = _db.Holidays
+                .Where(h => h.Date >= start.Date && h.Date <= end.Date)
+                .Select(h => h.Date.Date)
+                .ToHashSet();
+            return holidays;
+        }
+        catch
+        {
+            // Если таблица Holidays не существует, возвращаем пустой набор
+            return new HashSet<DateTime>();
+        }
+    }
+
+    private static IEnumerable<(DateTime from, DateTime to)> GetMonthlySegments(DateTime start, DateTime end)
+    {
+        var current = new DateTime(start.Year, start.Month, 1);
+        var last = new DateTime(end.Year, end.Month, 1);
+
+        while (current <= last)
+        {
+            var from = current < start ? start : current;
+            var monthEnd = new DateTime(current.Year, current.Month, DateTime.DaysInMonth(current.Year, current.Month));
+            var to = monthEnd > end ? end : monthEnd;
+
+            yield return (from.Date, to.Date);
+            current = current.AddMonths(1);
+        }
+    }
+
+private async Task<decimal> CalculateEmployeeCostExactAsync(ProjectResource resource)
+{
+    if (resource.EmployeeId is null) return 0m;
+    var emp = await _db.Employees.FindAsync(resource.EmployeeId.Value);
+    if (emp is null) return 0m;
+
+    var segments = GetMonthlySegments(resource.StartDate, resource.EndDate).ToList();
+    if (segments.Count == 0) return 0m;
+
+    decimal totalCost = 0m;
+
+    foreach (var (from, to) in segments)
+    {
+        // Количество рабочих дней в этом месяце (весь месяц)
+        var workingDaysInMonth = GetWorkingDaysInPeriod(
+            new DateTime(from.Year, from.Month, 1),
+            new DateTime(from.Year, from.Month, DateTime.DaysInMonth(from.Year, from.Month))
+        );
+        if (workingDaysInMonth <= 0) continue;
+
+        // Количество рабочих дней из интервала проекта в этом месяце
+        var daysInProject = GetWorkingDaysInPeriod(from, to);
+        if (daysInProject <= 0) continue;
+
+        // Расчёт с учетом налоговой ставки (в процентах)
+        var monthlySalaryWithTax = emp.MonthlySalary + emp.MonthlySalary * (emp.TaxRate / 100m);
+        var monthCostPerDay = monthlySalaryWithTax / workingDaysInMonth;
+        
+        totalCost += monthCostPerDay * daysInProject;
+    }
+
+    return totalCost;
+}
+}
+
+================================================================================
+FILE: Services\TechnicalTaskService.cs
+================================================================================
+
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using System.Text;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public class TechnicalTaskService : ITechnicalTaskService
+{
+    private readonly AppDbContext _db;
+
+    public TechnicalTaskService(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<TechnicalTask?> GetByProjectIdAsync(int projectId)
+    {
+        return await _db.TechnicalTasks
+            .FirstOrDefaultAsync(tt => tt.ProjectId == projectId);
+    }
+
+    public async Task<TechnicalTask> CreateOrUpdateAsync(TechnicalTask technicalTask)
+    {
+        var existing = await _db.TechnicalTasks
+            .FirstOrDefaultAsync(tt => tt.ProjectId == technicalTask.ProjectId);
+
+        technicalTask.UpdatedAt = DateTime.Now;
+
+        if (existing == null)
+        {
+            technicalTask.CreatedAt = DateTime.Now;
+            _db.TechnicalTasks.Add(technicalTask);
+        }
+        else
+        {
+            existing.Title = technicalTask.Title;
+            existing.Version = technicalTask.Version;
+            existing.Goals = technicalTask.Goals;
+            existing.FunctionalRequirements = technicalTask.FunctionalRequirements;
+            existing.NonFunctionalRequirements = technicalTask.NonFunctionalRequirements;
+            existing.SystemComposition = technicalTask.SystemComposition;
+            existing.TechStack = technicalTask.TechStack;
+            existing.UiRequirements = technicalTask.UiRequirements;
+            existing.Documentation = technicalTask.Documentation;
+            existing.Notes = technicalTask.Notes;
+            existing.Status = technicalTask.Status;
+            existing.UpdatedAt = technicalTask.UpdatedAt;
+            
+            _db.TechnicalTasks.Update(existing);
+            technicalTask = existing;
+        }
+
+        await _db.SaveChangesAsync();
+        return technicalTask;
+    }
+
+    public async Task<string> GenerateHtmlAsync(TechnicalTask technicalTask)
+    {
+        var project = await _db.Projects.FindAsync(technicalTask.ProjectId);
+        
+        var sb = new StringBuilder();
+        sb.AppendLine("<!DOCTYPE html>");
+        sb.AppendLine("<html>");
+        sb.AppendLine("<head>");
+        sb.AppendLine("<meta charset='utf-8'>");
+        sb.AppendLine($"<title>{EscapeHtml(technicalTask.Title)}</title>");
+        sb.AppendLine("<style>");
+        sb.AppendLine("body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; line-height: 1.6; color: #333; }");
+        sb.AppendLine("h1 { color: #2a5298; border-bottom: 3px solid #2a5298; padding-bottom: 10px; }");
+        sb.AppendLine("h2 { color: #1e3c72; margin-top: 30px; border-left: 4px solid #2a5298; padding-left: 15px; }");
+        sb.AppendLine(".header { text-align: center; margin-bottom: 30px; }");
+        sb.AppendLine(".meta { background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2a5298; }");
+        sb.AppendLine(".section { margin-bottom: 25px; }");
+        sb.AppendLine(".section-title { background: #e8f0fe; padding: 10px 15px; border-radius: 5px; font-weight: bold; font-size: 16px; }");
+        sb.AppendLine(".content { padding: 15px; background: #fafafa; border-radius: 5px; white-space: pre-wrap; }");
+        sb.AppendLine("</style>");
+        sb.AppendLine("</head>");
+        sb.AppendLine("<body>");
+        
+        sb.AppendLine("<div class='header'>");
+        sb.AppendLine($"<h1>{EscapeHtml(technicalTask.Title)}</h1>");
+        sb.AppendLine($"<p><strong>Версия:</strong> {EscapeHtml(technicalTask.Version)} | <strong>Статус:</strong> {GetStatusText(technicalTask.Status)}</p>");
+        sb.AppendLine("</div>");
+        
+        sb.AppendLine("<div class='meta'>");
+        sb.AppendLine($"<p><strong>Проект:</strong> {EscapeHtml(project?.Title ?? "Не указан")}</p>");
+        sb.AppendLine($"<p><strong>Дата создания:</strong> {technicalTask.CreatedAt:dd.MM.yyyy}</p>");
+        sb.AppendLine($"<p><strong>Дата обновления:</strong> {technicalTask.UpdatedAt:dd.MM.yyyy}</p>");
+        sb.AppendLine("</div>");
+        
+        AddSection(sb, "Цели и задачи", technicalTask.Goals);
+        AddSection(sb, "Функциональные требования", technicalTask.FunctionalRequirements);
+        AddSection(sb, "Нефункциональные требования", technicalTask.NonFunctionalRequirements);
+        AddSection(sb, "Состав системы", technicalTask.SystemComposition);
+        AddSection(sb, "Технологический стек", technicalTask.TechStack);
+        AddSection(sb, "Требования к интерфейсу", technicalTask.UiRequirements);
+        AddSection(sb, "Состав документации", technicalTask.Documentation);
+        AddSection(sb, "Примечания", technicalTask.Notes);
+        
+        sb.AppendLine("</body>");
+        sb.AppendLine("</html>");
+        
+        return sb.ToString();
+    }
+
+    public async Task<byte[]> GeneratePdfAsync(TechnicalTask technicalTask)
+    {
+        // ТЗ: требуется PDF.
+        // В текущем проекте нет полноценного HTML->PDF движка, поэтому создаём простой PDF через QuestPDF,
+        // используя те же данные ТЗ.
+        var project = await _db.Projects.FindAsync(technicalTask.ProjectId);
+
+        return QuestPDF.Fluent.Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Margin(30);
+
+                page.Header().AlignCenter().Text("ТЕХНИЧЕСКОЕ ЗАДАНИЕ").FontSize(18).Bold();
+
+                page.Content().PaddingVertical(15).Column(col =>
+                {
+                    col.Item().Text($"Проект: {project?.Title ?? "Не указан"}").FontSize(12);
+                    col.Item().Text($"Версия: {technicalTask.Version}").FontSize(12);
+                    col.Item().Text($"Статус: {GetStatusText(technicalTask.Status)}").FontSize(12);
+                    col.Item().Text($"Создано: {technicalTask.CreatedAt:dd.MM.yyyy}").FontSize(12);
+                    col.Item().Text($"Обновлено: {technicalTask.UpdatedAt:dd.MM.yyyy}").FontSize(12);
+
+                    col.Item().PaddingTop(10).Text(technicalTask.Title).FontSize(14).Bold();
+
+                    void AddBlock(string title, string? content)
+                    {
+                        if (string.IsNullOrWhiteSpace(content)) return;
+                        col.Item().PaddingTop(10).Text(title).FontSize(12).Bold();
+                        foreach (var line in content.Replace("\r\n", "\n").Split('\n'))
+                        {
+                            if (string.IsNullOrWhiteSpace(line)) continue;
+                            col.Item().Text(line).FontSize(10);
+                        }
+                    }
+
+                    AddBlock("Цели и задачи", technicalTask.Goals);
+                    AddBlock("Функциональные требования", technicalTask.FunctionalRequirements);
+                    AddBlock("Нефункциональные требования", technicalTask.NonFunctionalRequirements);
+                    AddBlock("Состав системы", technicalTask.SystemComposition);
+                    AddBlock("Технологический стек", technicalTask.TechStack);
+                    AddBlock("Требования к интерфейсу", technicalTask.UiRequirements);
+                    AddBlock("Состав документации", technicalTask.Documentation);
+                    AddBlock("Примечания", technicalTask.Notes);
+                });
+
+                page.Footer().AlignCenter().Text("Система автоматического расчёта стоимости IT-проектов").FontSize(8);
+            });
+        }).GeneratePdf();
+    }
+
+
+    public async Task<byte[]> GenerateWordAsync(TechnicalTask technicalTask)
+    {
+        return await GenerateDocxAsync(technicalTask);
+    }
+
+    private async Task<byte[]> GenerateDocxAsync(TechnicalTask technicalTask)
+    {
+        var project = await _db.Projects.FindAsync(technicalTask.ProjectId);
+
+        using var ms = new MemoryStream();
+        using (var doc = WordprocessingDocument.Create(ms, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true))
+        {
+            var mainPart = doc.AddMainDocumentPart();
+            mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
+
+            var body = mainPart.Document.Body;
+
+            // Заголовок
+            body.AppendChild(new Paragraph(
+                new ParagraphProperties(new Justification { Val = JustificationValues.Center }),
+                new Run(new Text("Техническое задание") { Space = SpaceProcessingModeValues.Preserve })));
+
+            body.AppendChild(new Paragraph(new Run(new Text(technicalTask.Title ?? string.Empty) { Space = SpaceProcessingModeValues.Preserve })));
+
+            body.AppendChild(AppendBlankLine());
+
+            // Метаданные
+            AppendKeyValue(body, "Версия", technicalTask.Version?.ToString());
+            AppendKeyValue(body, "Статус", GetStatusText(technicalTask.Status));
+            AppendKeyValue(body, "Проект", project?.Title);
+            AppendKeyValue(body, "Дата создания", technicalTask.CreatedAt.ToString("dd.MM.yyyy"));
+            AppendKeyValue(body, "Дата обновления", technicalTask.UpdatedAt.ToString("dd.MM.yyyy"));
+
+            body.AppendChild(AppendBlankLine());
+
+            AddSection(body, "Цели и задачи", technicalTask.Goals);
+            AddSection(body, "Функциональные требования", technicalTask.FunctionalRequirements);
+            AddSection(body, "Нефункциональные требования", technicalTask.NonFunctionalRequirements);
+            AddSection(body, "Состав системы", technicalTask.SystemComposition);
+            AddSection(body, "Технологический стек", technicalTask.TechStack);
+            AddSection(body, "Требования к интерфейсу", technicalTask.UiRequirements);
+            AddSection(body, "Состав документации", technicalTask.Documentation);
+            AddSection(body, "Примечания", technicalTask.Notes);
+
+            doc.MainDocumentPart?.Document.Save();
+        }
+
+        return ms.ToArray();
+    }
+
+    private static Paragraph AppendBlankLine() => new Paragraph(new Run(new Text("")));
+
+    private static void AppendKeyValue(Body body, string key, string? value)
+    {
+        var safe = value ?? string.Empty;
+        body.AppendChild(new Paragraph(
+            new Run(new Text($"{key}: {safe}"))));
+    }
+
+    private static void AddSection(Body body, string title, string? content)
+    {
+        if (string.IsNullOrWhiteSpace(content)) return;
+
+        body.AppendChild(new Paragraph(
+            new Run(new Text(title) { Space = SpaceProcessingModeValues.Preserve } )));
+
+        foreach (var line in content.Replace("\r\n", "\n").Split('\n'))
+        {
+            if (line == null) continue;
+            body.AppendChild(new Paragraph(new Run(new Text(line) { Space = SpaceProcessingModeValues.Preserve })));
+        }
+
+        body.AppendChild(AppendBlankLine());
+    }
+
+    public async Task<bool> ValidateAsync(TechnicalTask technicalTask)
+
+    {
+        if (string.IsNullOrWhiteSpace(technicalTask.Title))
+            return false;
+            
+        if (technicalTask.ProjectId <= 0)
+            return false;
+            
+        var project = await _db.Projects.FindAsync(technicalTask.ProjectId);
+        if (project == null)
+            return false;
+            
+        return true;
+    }
+
+    private void AddSection(StringBuilder sb, string title, string? content)
+    {
+        if (string.IsNullOrWhiteSpace(content)) return;
+        
+        sb.AppendLine("<div class='section'>");
+        sb.AppendLine($"<div class='section-title'>{EscapeHtml(title)}</div>");
+        sb.AppendLine($"<div class='content'>{EscapeHtml(content).Replace("\n", "<br/>")}</div>");
+        sb.AppendLine("</div>");
+    }
+
+    private string EscapeHtml(string text) => 
+        string.IsNullOrEmpty(text) ? "" : 
+        text.Replace("&", "&amp;")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;")
+            .Replace("\"", "&quot;")
+            .Replace("'", "&#39;");
+    
+    private string GetStatusText(TechnicalTaskStatus status) => status switch
+    {
+        TechnicalTaskStatus.Draft => "Черновик",
+        TechnicalTaskStatus.UnderReview => "На согласовании",
+        TechnicalTaskStatus.Approved => "Согласовано",
+        TechnicalTaskStatus.InProgress => "В работе",
+        TechnicalTaskStatus.Completed => "Завершено",
+        _ => "Неизвестно"
+    };
+}
+
+================================================================================
+FILE: Services\UserSnapshotHostedService.cs
+================================================================================
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Services;
+
+public class UserSnapshotHostedService : BackgroundService
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly TimeSpan _interval = TimeSpan.FromMinutes(10);
+
+    public UserSnapshotHostedService(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                // Snapshot делаем только для "активных" пользователей (у которых было действие за последние 30 минут)
+                // и только если с момента их прошлого Snapshot10m прошло >= 10 минут.
+
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var now = DateTime.UtcNow;
+                var minActivityUtc = now.AddMinutes(-30);
+
+                var activeUserIds = await db.UserAuditLogs
+                    .Where(l => l.CreatedAt >= minActivityUtc)
+                    .Select(l => l.UserId)
+                    .Distinct()
+                    .ToListAsync(stoppingToken);
+
+                foreach (var userId in activeUserIds)
+                {
+                    var userEmail = await userManager.Users
+                        .Where(u => u.Id == userId)
+                        .Select(u => u.Email ?? string.Empty)
+                        .FirstOrDefaultAsync(stoppingToken);
+
+                    var lastSnapshot = await db.UserAuditLogs
+                        .Where(l => l.UserId == userId && l.Action == "Snapshot10m")
+                        .OrderByDescending(l => l.CreatedAt)
+                        .Select(l => l.CreatedAt)
+                        .FirstOrDefaultAsync(stoppingToken);
+
+                    // если lastSnapshot == default(DateTime) то snapshot еще не было
+                    if (lastSnapshot != default && (now - lastSnapshot) < _interval)
+                        continue;
+
+                    db.UserAuditLogs.Add(new UserAuditLog
+                    {
+                        UserId = userId,
+                        UserEmail = userEmail,
+                        Action = "Snapshot10m",
+                        Entity = "User",
+                        EntityId = null,
+                        OldValue = null,
+                        NewValue = null,
+                        CreatedAt = now
+                    });
+                }
+
+
+                await db.SaveChangesAsync(stoppingToken);
+            }
+            catch
+            {
+                // чтобы не ломать цикл
+            }
+
+            try
+            {
+                await Task.Delay(_interval, stoppingToken);
+            }
+            catch (TaskCanceledException) { }
+        }
+    }
+}
+
+
+DATA
+
+================================================================================
+FILE: Data\AppDbContext.cs
+================================================================================
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Data;
+
+public class AppDbContext : IdentityDbContext<ApplicationUser>
+
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    // Основные реестры
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Executor> Executors { get; set; }
+    public DbSet<Subcontractor> Subcontractors { get; set; }
+    public DbSet<Equipment> Equipments { get; set; }
+
+    // Проекты и ресурсы
+    public DbSet<Project> Projects { get; set; }
+    public DbSet<ProjectResource> ProjectResources { get; set; }
+
+    // Настройки компании
+    public DbSet<CompanySettings> CompanySettings { get; set; }
+
+    // Профиль/Аватар/Аудит
+    public DbSet<UserAvatar> UserAvatars { get; set; }
+    public DbSet<UserAuditLog> UserAuditLogs { get; set; }
+
+
+    // Рабочие области
+    public DbSet<Workspace> Workspaces { get; set; }
+    public DbSet<WorkspaceUser> WorkspaceUsers { get; set; }
+
+    // Техническое задание
+    public DbSet<TechnicalTask> TechnicalTasks { get; set; }
+    public DbSet<Service> Services { get; set; }
+    public DbSet<Holiday> Holidays { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        // Настройка уникальности поддомена для рабочей области
+        builder.Entity<Workspace>()
+            .HasIndex(w => w.Subdomain)
+            .IsUnique();
+
+        // Связи WorkspaceUser
+        builder.Entity<WorkspaceUser>()
+            .HasOne(wu => wu.Workspace)
+            .WithMany(w => w.Users)
+            .HasForeignKey(wu => wu.WorkspaceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<WorkspaceUser>()
+            .HasOne(wu => wu.User)
+            .WithMany()
+            .HasForeignKey(wu => wu.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Связи TechnicalTask
+        builder.Entity<TechnicalTask>()
+            .HasOne(tt => tt.Project)
+            .WithMany()
+            .HasForeignKey(tt => tt.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Связи Service (типовые услуги для реестров)
+        builder.Entity<Service>()
+            .HasOne(s => s.Employee)
+            .WithMany()
+            .HasForeignKey(s => s.EmployeeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Service>()
+            .HasOne(s => s.Executor)
+            .WithMany()
+            .HasForeignKey(s => s.ExecutorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Service>()
+            .HasOne(s => s.Subcontractor)
+            .WithMany()
+            .HasForeignKey(s => s.SubcontractorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Service>()
+            .HasOne(s => s.Equipment)
+            .WithMany()
+            .HasForeignKey(s => s.EquipmentId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+}
+
+================================================================================
+FILE: Data\HolidaySeeder.cs
+================================================================================
+
+using WebWorkNew.Models;
+using WebWorkNew.Data;
+
+namespace WebWorkNew.Data;
+
+public static class HolidaySeeder
+{
+    public static void Seed(AppDbContext context)
+    {
+        if (context.Holidays.Any()) return;
+
+        var holidays = new List<Holiday>
+        {
+            // Новогодние праздники
+            new Holiday(new DateTime(2024, 1, 1), "Новый год"),
+            new Holiday(new DateTime(2024, 1, 2), "Новогодние каникулы"),
+            new Holiday(new DateTime(2024, 1, 3), "Новогодние каникулы"),
+            new Holiday(new DateTime(2024, 1, 4), "Новогодние каникулы"),
+            new Holiday(new DateTime(2024, 1, 5), "Новогодние каникулы"),
+            new Holiday(new DateTime(2024, 1, 6), "Новогодние каникулы"),
+            new Holiday(new DateTime(2024, 1, 7), "Рождество Христово"),
+            new Holiday(new DateTime(2024, 1, 8), "Новогодние каникулы"),
+            
+            // Другие праздники
+            new Holiday(new DateTime(2024, 2, 23), "День защитника Отечества"),
+            new Holiday(new DateTime(2024, 3, 8), "Международный женский день"),
+            new Holiday(new DateTime(2024, 5, 1), "Праздник Весны и Труда"),
+            new Holiday(new DateTime(2024, 5, 9), "День Победы"),
+            new Holiday(new DateTime(2024, 6, 12), "День России"),
+            new Holiday(new DateTime(2024, 11, 4), "День народного единства"),
+            
+            // Для 2025 года
+            new Holiday(new DateTime(2025, 1, 1), "Новый год"),
+            new Holiday(new DateTime(2025, 1, 2), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 1, 3), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 1, 4), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 1, 5), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 1, 6), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 1, 7), "Рождество Христово"),
+            new Holiday(new DateTime(2025, 1, 8), "Новогодние каникулы"),
+            new Holiday(new DateTime(2025, 2, 23), "День защитника Отечества"),
+            new Holiday(new DateTime(2025, 3, 8), "Международный женский день"),
+            new Holiday(new DateTime(2025, 5, 1), "Праздник Весны и Труда"),
+            new Holiday(new DateTime(2025, 5, 9), "День Победы"),
+            new Holiday(new DateTime(2025, 6, 12), "День России"),
+            new Holiday(new DateTime(2025, 11, 4), "День народного единства"),
+        };
+
+        context.Holidays.AddRange(holidays);
+        context.SaveChanges();
+    }
+}
+
+================================================================================
+FILE: Data\IdentitySeeder.cs
+================================================================================
+
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using WebWorkNew.Models;
+
+namespace WebWorkNew.Data;
+
+public static class IdentitySeeder
+{
+    public static async Task InitializeAsync(IServiceProvider serviceProvider)
+    {
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        string[] roles = ["GlobalAdmin", "CommercialDirector", "Accountant", "HR"];
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+                await roleManager.CreateAsync(new IdentityRole(role));
+        }
+
+        var adminEmail = "admin@local";
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+
+        if (admin == null)
+        {
+            admin = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Admin",
+                LastName = "Main",
+                MiddleName = "",
+                Position = "Global Admin",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(admin, "Admin123!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "GlobalAdmin");
+                await userManager.AddToRoleAsync(admin, "HR");
+                await userManager.AddToRoleAsync(admin, "CommercialDirector");
+                await userManager.AddToRoleAsync(admin, "Accountant");
+                
+                // Добавляем Claims
+                await userManager.AddClaimAsync(admin, new Claim("FirstName", admin.FirstName));
+                await userManager.AddClaimAsync(admin, new Claim("LastName", admin.LastName));
+                await userManager.AddClaimAsync(admin, new Claim("Position", admin.Position));
+            }
+        }
+        else
+        {
+            // Обновляем существующего пользователя
+            await userManager.RemovePasswordAsync(admin);
+            await userManager.AddPasswordAsync(admin, "Admin123!");
+
+            if (!await userManager.IsInRoleAsync(admin, "GlobalAdmin"))
+                await userManager.AddToRoleAsync(admin, "GlobalAdmin");
+            if (!await userManager.IsInRoleAsync(admin, "HR"))
+                await userManager.AddToRoleAsync(admin, "HR");
+            if (!await userManager.IsInRoleAsync(admin, "CommercialDirector"))
+                await userManager.AddToRoleAsync(admin, "CommercialDirector");
+            if (!await userManager.IsInRoleAsync(admin, "Accountant"))
+                await userManager.AddToRoleAsync(admin, "Accountant");
+            
+            // Добавляем Claims, если их нет
+            var claims = await userManager.GetClaimsAsync(admin);
+            if (!claims.Any(c => c.Type == "FirstName"))
+                await userManager.AddClaimAsync(admin, new Claim("FirstName", admin.FirstName ?? ""));
+            if (!claims.Any(c => c.Type == "LastName"))
+                await userManager.AddClaimAsync(admin, new Claim("LastName", admin.LastName ?? ""));
+            if (!claims.Any(c => c.Type == "Position"))
+                await userManager.AddClaimAsync(admin, new Claim("Position", admin.Position ?? ""));
+        }
+    }
+}
+
+================================================================================
+FILE: Data\TestDataSeeder.cs
+================================================================================
+
+using Microsoft.EntityFrameworkCore;
+using WebWorkNew.Models;
+using WebWorkNew.Enums;
+using WebWorkNew.Services;
+
+namespace WebWorkNew.Data;
+
+public static class TestDataSeeder
+{
+    public static async Task InitializeAsync(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+        try
+        {
+            // Проверяем подключение к БД
+            var canConnect = await db.Database.CanConnectAsync();
+            if (!canConnect)
+            {
+                logger.LogWarning("Cannot connect to database, skipping seed");
+                return;
+            }
+
+            // Если уже есть проекты — не пересоздаём
+            if (await db.Projects.AnyAsync())
+            {
+                logger.LogInformation("Database already has projects, skipping seed");
+                return;
+            }
+
+            logger.LogInformation("Seeding test data...");
+
+            // Customers
+            var c1 = new Customer
+            {
+                Inn = "7000000000",
+                Type = CustomerType.LegalEntity,
+                Name = "ООО Test",
+                FullName = "Test T.T.",
+                Email = "test@example.com",
+                Phone = "+70000000000"
+            };
+
+            var c2 = new Customer
+            {
+                Inn = "000000000",
+                Type = CustomerType.IndividualEntrepreneur,
+                FullName = "Test1 T.T.",
+                Email = "test1@example.com",
+                Phone = "+79990000011"
+            };
+
+            db.Customers.AddRange(c1, c2);
+            await db.SaveChangesAsync();
+
+            // Employees
+            var e1 = new Employee
+            {
+                Surname = "Testing",
+                Name = "Testov",
+                Patronymic = "Testing1",
+                Position = "Разработчик",
+                MonthlySalary = 200000,
+                TaxRate = 30.2m
+            };
+            
+            var e2 = new Employee
+            {
+                Surname = "Test2",
+                Name = "Test2.2",
+                Patronymic = null,
+                Position = "QA",
+                MonthlySalary = 120000,
+                TaxRate = 7.6m
+            };
+            
+            db.Employees.AddRange(e1, e2);
+            await db.SaveChangesAsync();
+
+            // Executors (physical persons)
+            var ex1 = new Executor
+            {
+                Surname = "Test3",
+                Name = "Testov3",
+                Patronymic = null,
+                EmploymentType = EmploymentType.FixedSalary,
+                TaxRate = 7.6m,
+                Unit = TimeUnit.Hours,
+                CostPerUnit = 2500m
+            };
+            
+            db.Executors.Add(ex1);
+            await db.SaveChangesAsync();
+
+            // Subcontractor (legal)
+            var s1 = new Subcontractor
+            {
+                Inn = "7800000000",
+                Name = "ООО Testing",
+                ContactName = "Руководитель",
+                Email = "example@example.com",
+                Phone = "+79990000222",
+                Unit = TimeUnit.Days,
+                CostPerUnit = 45000m,
+                TaxRate = 30.2m
+            };
+            
+            db.Subcontractors.Add(s1);
+            await db.SaveChangesAsync();
+
+            // Equipment
+            var eq1 = new Equipment
+            {
+                Title = "Сервер",
+                Description = "Аренда оборудования",
+                AcquisitionType = EquipmentAcquisitionType.Rental,
+                OperationalCost = 50000m,
+                Unit = TimeUnit.FullCost,
+                CostPerUnit = 300000m
+            };
+            
+            db.Equipments.Add(eq1);
+            await db.SaveChangesAsync();
+
+            // Project
+            var p1 = new Project
+            {
+                Title = "IT-Разработка — тестовый проект",
+                StartDate = DateTime.Today.AddDays(-10),
+                EndDate = DateTime.Today.AddDays(20),
+                Description = "Тестовые данные для сдачи",
+                CustomerId = c1.Id,
+                TaxRate = 20m,
+                TotalCostWithoutMargin = 0,
+                TotalCostWithMargin = 0,
+                NetProfit = 0
+            };
+            
+            db.Projects.Add(p1);
+            await db.SaveChangesAsync();
+
+            // Resources
+            var r1 = new ProjectResource
+            {
+                ProjectId = p1.Id,
+                ResourceName = "Разработка",
+                Type = ResourceType.Employee,
+                EmployeeId = e1.Id,
+                ServiceName = "Разработка ПО",
+                StartDate = p1.StartDate,
+                EndDate = p1.EndDate,
+                UnitsCount = 10,
+                MarginPercent = 20m
+            };
+
+            var r2 = new ProjectResource
+            {
+                ProjectId = p1.Id,
+                ResourceName = "Тестирование",
+                Type = ResourceType.Executor,
+                ExecutorId = ex1.Id,
+                ServiceName = "QA услуги",
+                StartDate = p1.StartDate,
+                EndDate = p1.EndDate,
+                UnitsCount = 8,
+                MarginPercent = 15m
+            };
+
+            var r3 = new ProjectResource
+            {
+                ProjectId = p1.Id,
+                ResourceName = "Интеграция",
+                Type = ResourceType.Subcontractor,
+                SubcontractorId = s1.Id,
+                ServiceName = "Внешняя интеграция",
+                StartDate = p1.StartDate,
+                EndDate = p1.EndDate,
+                UnitsCount = 5,
+                MarginPercent = 10m
+            };
+
+            var r4 = new ProjectResource
+            {
+                ProjectId = p1.Id,
+                ResourceName = "Инфраструктура",
+                Type = ResourceType.Equipment,
+                EquipmentId = eq1.Id,
+                ServiceName = "Использование оборудования",
+                StartDate = p1.StartDate,
+                EndDate = p1.EndDate,
+                UnitsCount = 1,
+                MarginPercent = 0m
+            };
+
+            db.ProjectResources.AddRange(r1, r2, r3, r4);
+            await db.SaveChangesAsync();
+
+            // Пересчёт итогов
+            p1.Resources = new List<ProjectResource> { r1, r2, r3, r4 };
+            
+            var calculator = new ProjectCalculationService(db);
+            await calculator.RecalculateAsync(p1);
+            await db.SaveChangesAsync();
+
+            logger.LogInformation("Test data seeded successfully!");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error seeding test data");
+        }
+    }
+}
+ENUMS
+
+================================================================================
+FILE: Enums\CustomerType.cs
+================================================================================
+
+namespace WebWorkNew.Enums;
+
+public enum CustomerType
+{
+    PhysicalPerson = 1,
+    IndividualEntrepreneur = 2,
+    LegalEntity = 3
+}
+
+
+
+================================================================================
+FILE: Enums\EmploymentType.cs
+================================================================================
+
+namespace WebWorkNew.Enums;
+
+public enum EmploymentType
+{
+    FixedSalary = 1,
+    Hourly = 2,
+
+    [System.ComponentModel.Description("ГПХ")]
+    GPH = 0,
+
+    [System.ComponentModel.Description("НПД")]
+    NPD = 1
+}
+
+
+
+================================================================================
+FILE: Enums\EquipmentAcquisitionType.cs
+================================================================================
+
+namespace WebWorkNew.Enums;
+
+public enum EquipmentAcquisitionType
+{
+    Own = 1,
+    Rental = 2
+}
+
+================================================================================
+FILE: Enums\ResourceType.cs
+================================================================================
+
+namespace WebWorkNew.Enums;
+
+public enum ResourceType
+{
+    Employee = 1,
+    Executor = 2,
+    Subcontractor = 3,
+    Equipment = 4
+}
+
+================================================================================
+FILE: Enums\TimeUnit.cs
+================================================================================
+
+namespace WebWorkNew.Enums;
+
+public enum TimeUnit
+{
+    Hours = 1,
+    Days = 2,
+    FullCost = 3
+}
+
+================================================================================
+FILE: Program.cs
+================================================================================
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using WebWorkNew.Services;
+
+// Настройка лицензии QuestPDF
+QuestPDF.Settings.License = LicenseType.Community;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
+// Database configuration - используем SQLite
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=WebWorkNew.db";
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(connectionString));
+
+// Identity configuration
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        
+                // НАСТРОЙКИ ПАРОЛЯ - ПРОСТЫЕ
+        options.Password.RequireDigit = false;              // Не требует цифры
+        options.Password.RequiredLength = 4;                // Минимум 4 символа
+        options.Password.RequiredUniqueChars = 0;            // Отключаем требование уникальных символов
+
+        options.Password.RequireNonAlphanumeric = false;    // Не требует спецсимволы
+        options.Password.RequireUppercase = false;          // Не требует заглавные
+        options.Password.RequireLowercase = false;          // Не требует строчные
+        
+        // НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ
+        options.User.RequireUniqueEmail = true;             // Email должен быть уникальным
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// Business services
+builder.Services.AddScoped<IProjectCalculationService, ProjectCalculationService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<ITechnicalTaskService, TechnicalTaskService>();
+builder.Services.AddScoped<IExcelExportService, ExcelExportService>();
+
+// Profil audit / snapshots
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ProfileAuditService>();
+builder.Services.AddHostedService<UserSnapshotHostedService>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var app = builder.Build();
+
+
+
+// Database initialization
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<AppDbContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    
+    try
+    {
+        await db.Database.EnsureCreatedAsync();
+        logger.LogInformation("Database created/ensured");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Database creation failed");
+    }
+
+    // Seed test data
+    try
+    {
+        await TestDataSeeder.InitializeAsync(services);
+        logger.LogInformation("Test data seeded successfully");
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Test data seeding failed");
+    }
+    
+    // Seed Identity roles and admin user
+    try
+    {
+        await IdentitySeeder.InitializeAsync(services);
+        logger.LogInformation("Identity seeded successfully");
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Identity seeding failed");
+    }
+
+    // Seed Holidays - ДОБАВЛЯЕМ ЭТОТ БЛОК
+    try
+    {
+        HolidaySeeder.Seed(db);
+        logger.LogInformation("Holidays seeded successfully");
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Holidays seeding failed");
+    }
+}
+
+// Development middleware
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAuthorization();
+
+// Route configuration
+app.MapGet("/", context => { context.Response.Redirect("/Projects"); return Task.CompletedTask; });
+
+// Важно: по умолчанию маршрутизация должна обслуживать MVC.
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Projects}/{action=Index}/{id?}");
+
+app.MapControllers();
+app.MapRazorPages();
+
+// Технически важно для Razor views: вернуть 404 если экшн не найден.
+// (если при этом показывается пустая страница — значит рендеринг не вызывается)
+app.UseStatusCodePages();
+
+// Без MVC-authorize редиректов: экспортные endpoints
+// (для соответствия ТЗ требуется реальная отдача файлов форматами)
+app.MapGet("/TechnicalTasks/export-pdf", async (int projectId, WebWorkNew.Services.ITechnicalTaskService service) =>
+{
+    var technicalTask = await service.GetByProjectIdAsync(projectId);
+    if (technicalTask == null) return Results.NotFound();
+
+    var pdf = await service.GeneratePdfAsync(technicalTask);
+    return Results.File(pdf, "application/pdf", $"ТЗ_проект_{projectId}.pdf");
+});
+
+app.MapGet("/TechnicalTasks/export-word", async (int projectId, WebWorkNew.Services.ITechnicalTaskService service) =>
+{
+    var technicalTask = await service.GetByProjectIdAsync(projectId);
+    if (technicalTask == null) return Results.NotFound();
+
+    var bytes = await service.GenerateWordAsync(technicalTask);
+    return Results.File(
+        bytes,
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        $"ТЗ_проект_{projectId}.docx");
+});
+
+app.Run();
+
+ALL VIEWS
+EXPORT COMPLETE

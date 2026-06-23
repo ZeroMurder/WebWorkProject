@@ -1,0 +1,25 @@
+@model WebWorkNew.Models.Workspace
+@{
+    ViewData["Title"] = "Удаление рабочей области";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <h2> Удаление рабочей области</h2>
+    
+    <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin-bottom: 20px;">
+        <p style="margin: 0; color: #856404;">
+            <strong>Внимание!</strong> Вы уверены, что хотите удалить рабочую область <strong>@Model.Name</strong>?
+        </p>
+        <p style="margin: 10px 0 0 0; color: #856404;">
+            Это действие удалит все проекты и ресурсы, связанные с этой областью, и не может быть отменено.
+        </p>
+    </div>
+    
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-danger"> Да, удалить</button>
+        <a href="/Workspaces" class="btn-secondary">Отмена</a>
+    </form>
+</div>

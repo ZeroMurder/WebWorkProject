@@ -1,0 +1,74 @@
+@model WebWorkNew.Models.Project
+
+@{
+    ViewData["Title"] = $"Расчет проекта: {Model.Title}";
+}
+
+<h2>Расчет стоимости проекта: @Model.Title</h2>
+
+<!-- Этап 2 по ТЗ: просмотр расчета -->
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Итоговые показатели</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td><strong>Себестоимость проекта</strong></td>
+                        <td class="text-end">@Model.TotalCostWithoutMargin.ToString("N2") ₽</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Маржинальность</strong></td>
+                        <td class="text-end">@(Model.Resources.Sum(r => r.MarginPercent).ToString("N2"))%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Стоимость с маржинальностью</strong></td>
+                        <td class="text-end">@Model.TotalCostWithMargin.ToString("N2") ₽</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Чистая прибыль</strong></td>
+                        <td class="text-end text-success">@Model.NetProfit.ToString("N2") ₽</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Документы</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/api/Documents/project/@Model.Id/commercial-offer/pdf" class="btn btn-danger">
+                        <i class="bi bi-file-pdf"></i> КП (PDF)
+                    </a>
+                    <a href="/api/Documents/project/@Model.Id/commercial-offer/excel" class="btn btn-success">
+                        <i class="bi bi-file-excel"></i> КП (Excel)
+                    </a>
+                    <a href="/api/Documents/project/@Model.Id/commercial-offer/word" class="btn btn-primary">
+                        <i class="bi bi-file-word"></i> КП (Word)
+                    </a>
+                    <hr />
+                    <a href="/api/Documents/project/@Model.Id/nma/pdf" class="btn btn-danger">
+                        <i class="bi bi-file-pdf"></i> НМА (PDF)
+                    </a>
+                    <a href="/api/Documents/project/@Model.Id/nma/excel" class="btn btn-success">
+                        <i class="bi bi-file-excel"></i> НМА (Excel)
+                    </a>
+                    <a href="/api/Documents/project/@Model.Id/nma/word" class="btn btn-primary">
+                        <i class="bi bi-file-word"></i> НМА (Word)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</div>

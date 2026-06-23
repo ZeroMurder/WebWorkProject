@@ -1,4 +1,4 @@
-@model WebWork.Models.Customer
+@model WebWorkNew.Models.Customer
 
 @{
     ViewData["Title"] = "Создать заказчика";
@@ -17,7 +17,7 @@
 
     <div class="field">
         <label asp-for="Type">Тип заказчика</label>
-        <select asp-for="Type" asp-items="Html.GetEnumSelectList<WebWork.Enums.CustomerType>()"></select>
+        <select asp-for="Type" asp-items="Html.GetEnumSelectList<WebWorkNew.Enums.CustomerType>()"></select>
     </div>
 
     <div class="field">
@@ -44,6 +44,6 @@
 </form>
 
 <p>
-    <a class="btn secondary" href="/Customers">↩️ К списку</a>
+    <a class="btn secondary" href="/Customers"> К списку</a>
 </p>
 

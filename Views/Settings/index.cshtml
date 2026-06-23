@@ -1,10 +1,10 @@
-@model IEnumerable<WebWork.Models.CompanySettings>
+@model IEnumerable<WebWorkNew.Models.CompanySettings>
 @{
     ViewData["Title"] = "Параметры системы";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>⚙️ Параметры системы</h2>
+<h2> Параметры системы</h2>
 
 <p>
     <a class="btn" href="/Settings/Create">➕ Добавить параметр</a>
@@ -27,7 +27,7 @@
             <td>Название компании</td>
             <td>@item.CompanyName</td>
             <td>
-                <a class="btn-secondary" href="/Settings/Edit/@item.Id">✏️ Редактировать</a>
+                <a class="btn-secondary" href="/Settings/Edit/@item.Id"> Редактировать</a>
              </td>
         </tr>
     }

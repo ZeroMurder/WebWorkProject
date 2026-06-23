@@ -1,6 +1,6 @@
-using WebWork.Enums;
+using WebWorkNew.Enums;
 
-namespace WebWork.Models;
+namespace WebWorkNew.Models;
 
 public class Equipment
 {

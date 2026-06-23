@@ -1,6 +1,8 @@
-using WebWork.Enums;
+// Models/Subcontractor.cs
 
-namespace WebWork.Models;
+using WebWorkNew.Enums;
+
+namespace WebWorkNew.Models;
 
 public class Subcontractor
 {
@@ -18,5 +20,12 @@ public class Subcontractor
     {
         var baseCost = units * CostPerUnit;
         return baseCost + baseCost * TaxRate / 100m;
+    }
+
+    // ДОБАВЛЯЕМ ПЕРЕГРУЗКУ С ПАРАМЕТРОМ taxRate (на случай, если понадобится)
+    public decimal CalculateCost(decimal units, decimal taxRate)
+    {
+        var baseCost = units * CostPerUnit;
+        return baseCost + baseCost * taxRate / 100m;
     }
 }

@@ -1,87 +1,296 @@
-@model WebWork.Models.Project
-@using WebWork.Enums
+@model WebWorkNew.Models.Project
+
 @{
-    ViewData["Title"] = "Ресурсы проекта";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = $"Ресурсы проекта: {Model.Title}";
+    // Если редактирование ресурсов в проекте — это опционально по ТЗ, то TinyMCE нам тут не нужен,
+    // но добавляем data-tinymce если появятся textarea.
 }
 
-<h2>Управление проектом: ресурсы</h2>
-<p><b>@Model.Title</b> (ID: @Model.Id)</p>
+<div class="row">
+    <div class="col-md-12">
+<h2>Ресурсы проекта: @Model.Title</h2>
 
-<h3>Список ресурсов</h3>
+<!-- Этап 2 по ТЗ: таблица ресурсов -->
+        
+        <!-- Кнопка добавления ресурса -->
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addResourceModal">
+            <i class="bi bi-plus-circle"></i> Добавить ресурс
+        </button>
+        
+        <!-- Таблица ресурсов -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Название ресурса</th>
+                        <th>Тип</th>
+                        <th>Исполнитель</th>
+                        <th>Услуга</th>
+                        <th>Интервал</th>
+                        <th>Кол-во</th>
+                        <th>Себестоимость</th>
+                        <th>Маржинальность</th>
+                        <th>Итоговая стоимость</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Resources != null && Model.Resources.Any())
+                    {
+                        foreach (var resource in Model.Resources)
+                        {
+                            <tr>
+                                <td>@resource.ResourceName</td>
+                                <td><span class="badge bg-info">@resource.Type</span></td>
+                                <td>
+                                    @if (resource.Employee != null)
+                                    {
+                                        <span>@resource.Employee.Surname @resource.Employee.Name</span>
+                                    }
+                                    else if (resource.Executor != null)
+                                    {
+                                        <span>@resource.Executor.FullName</span>
+                                    }
+                                    else if (resource.Subcontractor != null)
+                                    {
+                                        <span>@resource.Subcontractor.Name</span>
+                                    }
+                                    else if (resource.Equipment != null)
+                                    {
+                                        <span>@resource.Equipment.Title</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Не выбран</span>
+                                    }
+                                </td>
+                                <td>@resource.ServiceName</td>
+                                <td>@resource.StartDate.ToString("dd.MM.yyyy") - @resource.EndDate.ToString("dd.MM.yyyy")</td>
+                                <td>@resource.UnitsCount</td>
+                                <td>@resource.CostPrice.ToString("N2") ₽</td>
+                                <td>
+                                    @if (ViewBag.CanEditMargin)
+                                    {
+                                        <input type="number" class="form-control form-control-sm margin-input" 
+                                               value="@resource.MarginPercent" 
+                                               data-project-id="@Model.Id"
+                                               data-resource-id="@resource.Id" 
+                                               style="width: 70px;" 
+                                               step="0.01" min="0" max="100" />
+                                    }
+                                    else
+                                    {
+                                        <span>@resource.MarginPercent%</span>
+                                    }
+                                </td>
 
-<table>
-    <thead>
-    <tr>
-        <th>Тип</th>
-        <th>ResourceId</th>
-        <th>Услуга</th>
-        <th>Units</th>
-        <th>Margin</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (Model.Resources != null)
-    {
-        foreach (var r in Model.Resources)
-        {
-            <tr>
-                <td>@r.Type</td>
-                <td>
-                    @(r.EmployeeId?.ToString() ?? r.ExecutorId?.ToString() ?? r.SubcontractorId?.ToString() ?? r.EquipmentId?.ToString() ?? "")
-                </td>
-                <td>@(r.ServiceName ?? "")</td>
-                <td>@r.UnitsCount</td>
-                <td>@r.MarginPercent%</td>
-            </tr>
-        }
-    }
-    </tbody>
-</table>
-
-<h3 style="margin-top:18px;">Добавить ресурс</h3>
-
-<form asp-action="AddResource" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="projectId" value="@Model.Id" />
-
-    <div class="row">
-        <div class="field" style="flex:1; min-width:200px;">
-            <label>ResourceType</label>
-            <select name="ResourceType" id="ResourceType" onchange="onTypeChange()">
-                @foreach (ResourceType t in Enum.GetValues(typeof(ResourceType)))
-                {
-                    <option value="@( (int)t )">@t</option>
-                }
-            </select>
+                                <td>@resource.FinalCost.ToString("N2") ₽</td>
+                                <td>
+                                    <form asp-action="RemoveResource" method="post" style="display: inline;">
+                                        <input type="hidden" name="projectId" value="@Model.Id" />
+                                        <input type="hidden" name="resourceId" value="@resource.Id" />
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Удалить ресурс?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">Нет добавленных ресурсов</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="field" style="flex:1; min-width:200px;">
-            <label>ResourceId</label>
-            <input name="ResourceId" type="number" />
-            <input type="hidden" id="hiddenEmployeeId" name="EmployeeId" />
-            <input type="hidden" id="hiddenExecutorId" name="ExecutorId" />
-            <input type="hidden" id="hiddenSubcontractorId" name="SubcontractorId" />
-            <input type="hidden" id="hiddenEquipmentId" name="EquipmentId" />
+        
+        <!-- Итоги -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Себестоимость:</strong> @Model.TotalCostWithoutMargin.ToString("N2") ₽
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Стоимость с маржинальностью:</strong> @Model.TotalCostWithMargin.ToString("N2") ₽
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Чистая прибыль:</strong> @Model.NetProfit.ToString("N2") ₽
+                    </div>
+                    <div class="col-md-3">
+                        <a asp-action="Calculation" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="bi bi-calculator"></i> Полный расчет
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="field" style="flex:1; min-width:200px;">
-            <label>ServiceId</label>
-            <input name="ServiceId" type="number" />
-            <div style="font-size:12px; opacity:.7; margin-top:6px;">Пока используется для связки/расчёта. В интерфейсе можно оставить 1.</div>
-        </div>
-        <div class="field" style="flex:1; min-width:200px;">
-            <label>Units</label>
-            <input name="Units" type="number" step="any" />
+<!-- Модальное окно добавления ресурса -->
+<div class="modal fade" id="addResourceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавление ресурса</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+    <form asp-action="AddResource" method="post">
+                <input type="hidden" name="projectId" value="@Model.Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Тип ресурса</label>
+                                <select name="resource.Type" class="form-select" id="resourceType" onchange="onTypeChange()">
+                                    @foreach (var t in Enum.GetValues(typeof(WebWorkNew.Enums.ResourceType)).Cast<WebWorkNew.Enums.ResourceType>())
+                                    {
+                                        <option value="@( (int)t )">@t</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">ID ресурса</label>
+                                <input name="resourceIdInput" id="resourceIdInput" type="number" class="form-control" />
+
+                                <input type="hidden" id="hiddenEmployeeId" name="resource.EmployeeId" />
+                                <input type="hidden" id="hiddenExecutorId" name="resource.ExecutorId" />
+                                <input type="hidden" id="hiddenSubcontractorId" name="resource.SubcontractorId" />
+                                <input type="hidden" id="hiddenEquipmentId" name="resource.EquipmentId" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Название услуги (опционально)</label>
+                                <input name="resource.ServiceName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Количество</label>
+                                <input name="resource.UnitsCount" class="form-control" type="number" step="0.01" value="1" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Маржинальность (%)</label>
+                                <input name="resource.MarginPercent" class="form-control" type="number" step="0.01" value="0" @(ViewBag.CanEditMargin ? "" : "disabled") />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </form>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    // 1) Привязываем введённый resourceIdInput к нужному hidden-полю в зависимости от Типа ресурса.
+                    const typeSelect = document.getElementById('resourceType');
+                    const resourceIdInput = document.getElementById('resourceIdInput');
+                    const hiddenEmployeeId = document.getElementById('hiddenEmployeeId');
+                    const hiddenExecutorId = document.getElementById('hiddenExecutorId');
+                    const hiddenSubcontractorId = document.getElementById('hiddenSubcontractorId');
+                    const hiddenEquipmentId = document.getElementById('hiddenEquipmentId');
+                    const form = document.querySelector('#addResourceModal form');
+
+                    function applyTypeMapping() {
+                        if (!typeSelect || !resourceIdInput) return;
+                        const val = resourceIdInput.value;
+                        const type = parseInt(typeSelect.value, 10);
+
+                        // сброс всех hidden
+                        if (hiddenEmployeeId) hiddenEmployeeId.value = '';
+                        if (hiddenExecutorId) hiddenExecutorId.value = '';
+                        if (hiddenSubcontractorId) hiddenSubcontractorId.value = '';
+                        if (hiddenEquipmentId) hiddenEquipmentId.value = '';
+
+                        // Enum ResourceType: используем Int values из <option value="(int)t">
+                        // предполагаем: 1=Employee, 2=Executor, 3=Subcontractor, 4=Equipment (если порядок другой — поправим)
+                        if (type === 1 && hiddenEmployeeId) hiddenEmployeeId.value = val;
+                        else if (type === 2 && hiddenExecutorId) hiddenExecutorId.value = val;
+                        else if (type === 3 && hiddenSubcontractorId) hiddenSubcontractorId.value = val;
+                        else if (type === 4 && hiddenEquipmentId) hiddenEquipmentId.value = val;
+                    }
+
+                    if (typeSelect && resourceIdInput) {
+                        typeSelect.addEventListener('change', applyTypeMapping);
+                        resourceIdInput.addEventListener('input', applyTypeMapping);
+                        applyTypeMapping();
+                    }
+
+                    if (form) {
+                        form.addEventListener('submit', () => applyTypeMapping());
+                    }
+
+                    // 2) обработчик обновления маржи через API
+                    const inputs = document.querySelectorAll('.margin-input[data-project-id][data-resource-id]');
+                    inputs.forEach(inp => {
+                        inp.addEventListener('change', async (e) => {
+                            const projectId = inp.getAttribute('data-project-id');
+                            const resourceId = inp.getAttribute('data-resource-id');
+                            const margin = e.target.value;
+
+                            if (!projectId || !resourceId) return;
+
+                            try {
+                                e.target.disabled = true;
+                                const resp = await window.resourceApi.updateMargin(
+                                    parseInt(projectId, 10),
+                                    parseInt(resourceId, 10),
+                                    parseFloat(margin)
+                                );
+
+                                toastr.success(resp?.message || 'Маржинальность обновлена');
+
+                                // Подменяем FinalCost в строке
+                                const row = inp.closest('tr');
+                                if (row && row.querySelector('td:nth-last-child(2)')) {
+                                    // В таблице FinalCost идёт перед Действиями (т.е. предпоследний td)
+                                    const finalCell = row.querySelector('td:nth-last-child(2)');
+                                    if (finalCell) {
+                                        finalCell.textContent = `${(resp?.newFinalCost ?? 0).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ₽`;
+                                    }
+                                }
+
+                                // Итоги снизу можно обновлять через summary (если найдены разметки)
+                                const summary = await window.resourceApi.getProjectSummary(parseInt(projectId, 10));
+                                if (summary) {
+                                    const rootCard = document.querySelector('.card.mt-3');
+                                    if (rootCard) {
+                                        const tds = rootCard.querySelectorAll('strong');
+                                        // проще: ищем по текстовым label
+                                        // Себестоимость:
+                                        const seb = [...rootCard.querySelectorAll('div.col-md-3')].find(d => d.textContent.includes('Себестоимость'));
+                                        if (seb) seb.lastChild.textContent = ` ${summary.totalCostWithoutMargin.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ₽`;
+                                    }
+                                }
+                            } catch (err) {
+                                toastr.error(err?.message || 'Ошибка обновления маржинальности');
+                            } finally {
+                                e.target.disabled = false;
+                            }
+                        });
+                    });
+                });
+            </script>
         </div>
     </div>
+</div>
 
-    <div class="field">
-        <label>Margin, %</label>
-        <input name="Margin" type="number" step="any" />
-    </div>
-
-    <button type="submit" class="btn">Добавить</button>
-</form>
-
+@section Scripts {
+    <script>
+        // Старый AJAX-код не используется: поля выбираются через ввод ID и заполнение hidden-полей.
+    </script>
+}

@@ -1,0 +1,195 @@
+:root{
+  --admin-bg0:#04060f;
+  --admin-bg1:#071a2f;
+  --admin-panel:rgba(255,255,255,.07);
+  --admin-panel2:rgba(255,255,255,.10);
+  --admin-stroke:rgba(255,255,255,.15);
+  --admin-text:#EAF2FF;
+  --admin-gold:#F7D774;
+  --admin-gold2:#B8860B;
+  --admin-diamond:#38BDF8;
+  --admin-diamond2:#A78BFA;
+  --admin-neon:#22D3EE;
+  --admin-neon2:#7C3AED;
+  --admin-danger:#FF4D6D;
+}
+
+/* Neon frame */
+.admin-neon {
+  position: relative;
+  border-radius: 18px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,.2),
+    0 0 50px rgba(34,211,238,.18),
+    0 0 120px rgba(124,58,237,.12);
+  overflow: hidden;
+}
+.admin-neon::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background:
+    radial-gradient(600px 120px at 20% 0%, rgba(34,211,238,.35), transparent 50%),
+    radial-gradient(500px 120px at 80% 0%, rgba(124,58,237,.35), transparent 50%),
+    linear-gradient(135deg, rgba(124,58,237,.18), rgba(34,211,238,.12));
+  opacity:.9;
+  pointer-events:none;
+}
+.admin-neon > *{ position:relative; z-index:1; }
+
+/* Admin badge */
+.admin-identity{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom: 14px;
+}
+.admin-identity .badge{
+  width:54px;
+  height:54px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(247,215,116,.95), rgba(184,134,11,.25) 55%, rgba(124,58,237,.12) 100%);
+  border: 1px solid rgba(247,215,116,.55);
+  box-shadow:
+    0 0 22px rgba(247,215,116,.26),
+    0 0 60px rgba(124,58,237,.18);
+}
+.admin-identity .badge span{
+  font-weight:900;
+  color: var(--admin-gold);
+  text-shadow: 0 0 18px rgba(247,215,116,.35);
+  letter-spacing:.3px;
+}
+
+.admin-identity .who{
+  line-height:1.15;
+}
+.admin-identity .who .name{
+  font-weight:900;
+  font-size:18px;
+  color: var(--admin-gold);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-shadow: 0 0 18px rgba(247,215,116,.28);
+}
+.admin-identity .who .role{
+  display:inline-block;
+  margin-top: 4px;
+  font-weight:800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.92);
+  background:
+    linear-gradient(90deg, rgba(56,189,248,.20), rgba(167,139,250,.20));
+  border: 1px solid rgba(56,189,248,.42);
+  box-shadow: 0 0 25px rgba(56,189,248,.2);
+}
+
+.admin-neon .sub{
+  color: rgba(234,242,255,.75);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.admin-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin: 14px 0 6px;
+}
+.admin-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  text-decoration:none;
+  cursor:pointer;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: var(--admin-text);
+  transition: .18s ease;
+}
+.admin-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(34,211,238,.35);
+  box-shadow: 0 16px 60px rgba(124,58,237,.15);
+}
+.admin-btn.primary{
+  background: linear-gradient(135deg, rgba(124,58,237,.92), rgba(34,211,238,.78));
+  border-color: rgba(34,211,238,.32);
+  color:#051018;
+  font-weight:900;
+}
+
+/* Modal */
+.admin-modal-overlay{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.55);
+  z-index: 9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+}
+.admin-modal-overlay.show{ display:flex; }
+
+.admin-modal{
+  width: min(780px, 100%);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 0 0 1px rgba(124,58,237,.2),
+    0 0 60px rgba(34,211,238,.18),
+    0 0 120px rgba(124,58,237,.12);
+  overflow:hidden;
+}
+.admin-modal header{
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(34,211,238,.18));
+  border-bottom: 1px solid rgba(255,255,255,.14);
+}
+.admin-modal header .t{
+  font-weight:950;
+  color: var(--admin-gold);
+  text-decoration: underline;
+  text-decoration-thickness:2px;
+  text-underline-offset: 4px;
+}
+.admin-modal .content{
+  padding: 14px 16px 6px;
+  color: rgba(234,242,255,.88);
+  font-size: 14px;
+}
+.admin-modal .content ul{ margin: 10px 0 14px 18px; }
+.admin-modal .content li{ margin: 8px 0; }
+.admin-modal footer{
+  padding: 12px 16px 16px;
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+}
+.admin-close{
+  border-radius: 14px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--admin-text);
+}
+.admin-close:hover{ background: rgba(255,255,255,.10); }
+
+/* Admin table accents */
+.admin-table td, .admin-table th{ border-bottom-color: rgba(255,255,255,.08); }
+

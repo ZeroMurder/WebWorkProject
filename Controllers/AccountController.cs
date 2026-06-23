@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebWork.Models;
+using WebWorkNew.Models;
 
-namespace WebWork.Controllers;
+namespace WebWorkNew.Controllers;
 
 public class AccountController : Controller
 {
@@ -38,6 +38,7 @@ public class AccountController : Controller
             return View();
         }
 
+
         // Поиск пользователя по email или username
         var user = await _userManager.FindByEmailAsync(username) ??
                    await _userManager.FindByNameAsync(username);
@@ -49,6 +50,7 @@ public class AccountController : Controller
             return View();
         }
 
+
         var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
@@ -56,17 +58,17 @@ public class AccountController : Controller
             return LocalRedirect(returnUrl);
         }
 
+
         ViewBag.ReturnUrl = returnUrl;
         ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
         return View();
     }
 
-    [Authorize]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+
+    [HttpGet]
     public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Login));
-        }
+{
+    await _signInManager.SignOutAsync();
+    return RedirectToAction(nameof(Login));
+}
 }

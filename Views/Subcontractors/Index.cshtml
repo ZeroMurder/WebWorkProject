@@ -1,4 +1,4 @@
-@model IEnumerable<WebWork.Models.Subcontractor>
+@model IEnumerable<WebWorkNew.Models.Subcontractor>
 
 @{
     ViewData["Title"] = "Реестр субподрядчиков";
@@ -40,8 +40,8 @@
             <td>@x.CostPerUnit</td>
             <td>@x.TaxRate</td>
             <td>
-                <a class="btn secondary" href="/Subcontractors/Edit/@x.Id">✏️ Edit</a>
-                <a class="btn secondary" href="/Subcontractors/Delete/@x.Id">🗑️ Delete</a>
+                <a class="btn secondary" href="/Subcontractors/Edit/@x.Id">Edit</a>
+                <a class="btn secondary" href="/Subcontractors/Delete/@x.Id">Delete</a>
             </td>
         </tr>
     }

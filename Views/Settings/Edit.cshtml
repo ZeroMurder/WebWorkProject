@@ -1,10 +1,10 @@
-@model WebWork.Models.CompanySettings
+@model WebWorkNew.Models.CompanySettings
 @{
     ViewData["Title"] = "Редактировать настройки";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>✏️ Редактировать настройки компании</h2>
+<h2> Редактировать настройки компании</h2>
 
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()

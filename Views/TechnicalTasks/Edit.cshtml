@@ -1,0 +1,87 @@
+@model WebWorkNew.Models.TechnicalTask
+@{
+    ViewData["Title"] = "Редактирование ТЗ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var project = ViewBag.Project as WebWorkNew.Models.Project;
+}
+
+<h2>Редактирование технического задания</h2>
+
+@if (project != null)
+{
+    <p style="color:#666;">Проект: <strong>@project.Title</strong></p>
+}
+
+<form asp-action="Edit" asp-controller="TechnicalTasks" method="post">
+    <input type="hidden" asp-for="ProjectId" />
+
+    <div class="card" style="margin-top:16px;">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Version" class="form-label"></label>
+            <input asp-for="Version" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label"></label>
+            <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<WebWorkNew.Models.TechnicalTaskStatus>()"></select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Goals" class="form-label"></label>
+<textarea asp-for="Goals" class="form-control" data-tinymce="true"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FunctionalRequirements" class="form-label"></label>
+            <textarea asp-for="FunctionalRequirements" class="form-control" data-tinymce="true"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NonFunctionalRequirements" class="form-label"></label>
+<textarea asp-for="NonFunctionalRequirements" class="form-control tinymce" data-tinymce="true"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SystemComposition" class="form-label"></label>
+<textarea asp-for="SystemComposition" class="form-control tinymce" data-tinymce="true"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TechStack" class="form-label"></label>
+<textarea asp-for="TechStack" class="form-control tinymce" data-tinymce="true"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="UiRequirements" class="form-label"></label>
+            <textarea asp-for="UiRequirements" class="form-control tinymce"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Documentation" class="form-label"></label>
+            <textarea asp-for="Documentation" class="form-control tinymce"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-control tinymce"></textarea>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
+            <button type="submit" class="btn">Сохранить</button>
+            <a class="btn-secondary" href="/TechnicalTasks/ExportPdf?projectId=@Model.ProjectId">PDF</a>
+            <a class="btn-secondary" href="/TechnicalTasks/ExportWord?projectId=@Model.ProjectId">Word</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/tinymce-init.js"></script>
+}
+

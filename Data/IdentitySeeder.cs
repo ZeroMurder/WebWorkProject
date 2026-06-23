@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using WebWork.Models;
+using WebWorkNew.Models;
 
-namespace WebWork.Data;
+namespace WebWorkNew.Data;
 
 public static class IdentitySeeder
 {
@@ -31,7 +31,7 @@ public static class IdentitySeeder
                 FirstName = "Admin",
                 LastName = "Main",
                 MiddleName = "",
-                Position = "GlobalAdmin",
+                Position = "Global Admin",
                 EmailConfirmed = true
             };
 
@@ -43,7 +43,7 @@ public static class IdentitySeeder
                 await userManager.AddToRoleAsync(admin, "CommercialDirector");
                 await userManager.AddToRoleAsync(admin, "Accountant");
                 
-                // Добавляем claims
+                // Добавляем Claims
                 await userManager.AddClaimAsync(admin, new Claim("FirstName", admin.FirstName));
                 await userManager.AddClaimAsync(admin, new Claim("LastName", admin.LastName));
                 await userManager.AddClaimAsync(admin, new Claim("Position", admin.Position));
@@ -57,16 +57,14 @@ public static class IdentitySeeder
 
             if (!await userManager.IsInRoleAsync(admin, "GlobalAdmin"))
                 await userManager.AddToRoleAsync(admin, "GlobalAdmin");
-            
             if (!await userManager.IsInRoleAsync(admin, "HR"))
                 await userManager.AddToRoleAsync(admin, "HR");
-            
             if (!await userManager.IsInRoleAsync(admin, "CommercialDirector"))
                 await userManager.AddToRoleAsync(admin, "CommercialDirector");
-            
             if (!await userManager.IsInRoleAsync(admin, "Accountant"))
                 await userManager.AddToRoleAsync(admin, "Accountant");
-
+            
+            // Добавляем Claims, если их нет
             var claims = await userManager.GetClaimsAsync(admin);
             if (!claims.Any(c => c.Type == "FirstName"))
                 await userManager.AddClaimAsync(admin, new Claim("FirstName", admin.FirstName ?? ""));

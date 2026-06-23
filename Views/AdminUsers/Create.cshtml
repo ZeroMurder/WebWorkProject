@@ -1,0 +1,115 @@
+@model WebWorkNew.Controllers.CreateUserViewModel
+@{
+    ViewData["Title"] = "Создание пользователя";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var roles = ViewBag.Roles as List<Microsoft.AspNetCore.Identity.IdentityRole>;
+    var workspaces = ViewBag.Workspaces as List<WebWorkNew.Models.Workspace>;
+}
+
+<div class="card">
+    <h2>➕ Создание пользователя</h2>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <div class="field">
+                    <label asp-for="LastName">Фамилия *</label>
+                    <input asp-for="LastName" class="form-control" required />
+                </div>
+
+                <div class="field">
+                    <label asp-for="FirstName">Имя *</label>
+                    <input asp-for="FirstName" class="form-control" required />
+                </div>
+
+                <div class="field">
+                    <label asp-for="MiddleName">Отчество</label>
+                    <input asp-for="MiddleName" class="form-control" />
+                </div>
+
+                <div class="field">
+                    <label asp-for="Position">Должность *</label>
+                    <input asp-for="Position" class="form-control" required />
+                </div>
+            </div>
+
+            <div>
+                <div class="field">
+                    <label asp-for="Email">Email *</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+
+                <div class="field">
+                    <label asp-for="Password">Пароль *</label>
+                    <input asp-for="Password" type="password" class="form-control" required />
+                    <small>Минимум 3 символа</small>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Role">Роль</label>
+                    <select asp-for="Role" class="form-control">
+                        <option value="">-- Выберите роль --</option>
+                        @if (roles != null)
+                        {
+                            foreach (var role in roles)
+                            {
+                                <option value="@role.Name">@role.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Рабочие области</label>
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; max-height: 300px; overflow-y: auto;">
+                @if (workspaces != null && workspaces.Any())
+                {
+                    foreach (var ws in workspaces)
+                    {
+                        <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 8px;">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" name="WorkspaceIds" value="@ws.Id"
+                                       onchange="toggleWorkspacePermissions(this, @ws.Id)" />
+                                <strong>@ws.Name</strong> (@ws.Subdomain)
+                            </label>
+                            <div id="perms-@ws.Id" style="margin-left: 30px; margin-top: 10px; display: none;">
+                                <label style="margin-right: 15px;">
+                                    <input type="checkbox" name="WorkspacePermissions[@ws.Id].CanEdit" value="true" />
+                                    Редактирование проектов
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="WorkspacePermissions[@ws.Id].CanManage" value="true" />
+                                    Управление областью
+                                </label>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="color: #666;">Нет доступных рабочих областей</p>
+                }
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn">✅ Создать</button>
+            <a href="/AdminUsers" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleWorkspacePermissions(checkbox, workspaceId) {
+            var permsDiv = document.getElementById('perms-' + workspaceId);
+            if (!permsDiv) return;
+            permsDiv.style.display = checkbox.checked ? 'block' : 'none';
+        }
+    </script>
+}
+

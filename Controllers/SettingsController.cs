@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebWork.Data;
-using WebWork.Models;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
 
-namespace WebWork.Controllers;
+namespace WebWorkNew.Controllers;
 
 [Authorize]
 public class SettingsController : Controller

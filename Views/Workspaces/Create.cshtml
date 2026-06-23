@@ -1,0 +1,34 @@
+@model WebWorkNew.Models.Workspace
+@{
+    ViewData["Title"] = "Создание рабочей области";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <h2>➕ Создание рабочей области</h2>
+    
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        
+        <div class="field">
+            <label asp-for="Name">Название рабочей области *</label>
+            <input asp-for="Name" class="form-control" placeholder="например: Разработка CRM" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        
+        <div class="field">
+            <label asp-for="Subdomain">Поддомен *</label>
+            <div style="display: flex; align-items: center;">
+                <input asp-for="Subdomain" class="form-control" placeholder="например: crm-dev" style="flex: 1;" />
+                <span style="margin-left: 10px; color: #666;">.iqnix.tech</span>
+            </div>
+            <small style="color: #666;">Пример: ptm.iqnix.tech/workspace1</small>
+            <span asp-validation-for="Subdomain" class="text-danger"></span>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn">✅ Создать</button>
+            <a href="/Workspaces" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>

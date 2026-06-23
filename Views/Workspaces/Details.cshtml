@@ -1,0 +1,103 @@
+@model WebWorkNew.Models.Workspace
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var projects = ViewBag.Projects as List<WebWorkNew.Models.Project>;
+    var canEditProjects = ViewBag.CanEditProjects;
+    var canManageWorkspace = ViewBag.CanManageWorkspace;
+}
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+        <h2>🏢 @Model.Name</h2>
+        <div class="text-muted" style="margin-top:-6px">@(Model.Subdomain + ".iqnix.tech")</div>
+            <p style="color: #666; margin-bottom: 0;">👥 Участников: @(Model.Users?.Count ?? 0)</p>
+        </div>
+        <div>
+            @if (canManageWorkspace || User.IsInRole("GlobalAdmin"))
+            {
+                <a href="/Workspaces/Edit/@Model.Id" class="btn-secondary">✏️ Редактировать</a>
+                <a asp-controller="Workspaces" asp-action="ManageUsers" asp-route-id="@Model.Id" class="btn-secondary">👥 Управление доступом</a>
+            }
+            <a href="/Workspaces" class="btn-secondary">← Назад</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>📋 Проекты рабочей области</h3>
+        @if (canEditProjects || User.IsInRole("GlobalAdmin"))
+        {
+            <a href="/Projects/Create?workspaceId=@Model.Id" class="btn">➕ Создать проект</a>
+        }
+    </div>
+    
+    @if (projects == null || !projects.Any())
+    {
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <p>В этой рабочей области пока нет проектов</p>
+            @if (canEditProjects || User.IsInRole("GlobalAdmin"))
+            {
+                <p>Нажмите "Создать проект" чтобы начать</p>
+            }
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Название проекта</th>
+                    <th>Статус</th>
+                    <th>Срок выполнения</th>
+                    <th>Стоимость</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in projects)
+                {
+                    <tr>
+                        <td>@p.Title</td>
+                        <td>
+                            @{
+                                string statusClass = p.Status switch
+                                {
+                                    WebWorkNew.Models.ProjectStatus.Draft => "status-draft",
+                                    WebWorkNew.Models.ProjectStatus.Active => "status-active",
+                                    WebWorkNew.Models.ProjectStatus.Paused => "status-paused",
+                                    WebWorkNew.Models.ProjectStatus.Completed => "status-completed",
+                                    _ => "status-cancelled"
+                                };
+                                string statusText = p.Status switch
+                                {
+                                    WebWorkNew.Models.ProjectStatus.Draft => "Черновик",
+                                    WebWorkNew.Models.ProjectStatus.Active => "Активный",
+                                    WebWorkNew.Models.ProjectStatus.Paused => "Приостановлен",
+                                    WebWorkNew.Models.ProjectStatus.Completed => "Завершен",
+                                    _ => "Отменен"
+                                };
+                            }
+                            <span class="status-badge @statusClass">@statusText</span>
+                         </td>
+                        <td>@p.StartDate.ToString("dd.MM.yyyy") - @p.EndDate.ToString("dd.MM.yyyy")</td>
+                        <td>@p.TotalCostWithMargin.ToString("N2") ₽</td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                                <a asp-controller="Projects" asp-action="Edit" asp-route-id="@p.Id" class="btn-secondary" style="padding: 4px 8px;">✏️</a>
+                                <a asp-controller="Projects" asp-action="Resources" asp-route-id="@p.Id" class="btn-secondary" style="padding: 4px 8px;">📊</a>
+                                <a href="/api/Documents/project/@p.Id/commercial-offer/pdf" class="btn-secondary" style="padding: 4px 8px;">📄 КП</a>
+                                <a href="/api/Documents/project/@p.Id/nma/pdf" class="btn-secondary" style="padding: 4px 8px;">📄 НМА</a>
+                                <a asp-controller="Projects" asp-action="Calculation" asp-route-id="@p.Id" class="btn btn-sm btn-info">
+                                 <i class="bi bi-calculator"></i> Просмотр расчёта</a>
+                            </div>
+                         </td>
+                         
+                     </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

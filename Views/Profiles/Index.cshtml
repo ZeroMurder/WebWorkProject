@@ -3,46 +3,114 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>👤 Профиль пользователя</h2>
+<h2>Профиль пользователя</h2>
+
+<style>
+    .profile-grid { display:flex; gap:20px; flex-wrap:wrap; align-items:stretch; }
+    .profile-left { flex: 1; min-width: 320px; }
+    .profile-right { flex: 1; min-width: 320px; }
+    .avatar-block { display:flex; gap:16px; align-items:center; }
+    .avatar-img { width:92px; height:92px; border-radius:22px; object-fit:cover; border:1px solid rgba(255,255,255,0.18); box-shadow:0 0 0 3px rgba(42,82,152,0.35); }
+    .panel { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:16px; box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+    .muted { color: rgba(255,255,255,0.7); font-size: 13px; }
+    .audit-table th, .audit-table td { padding:10px 12px; }
+    .audit-table td { font-size:13px; }
+    .form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+</style>
 
 <div class="card">
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <div style="flex: 1;">
-            <h3>Информация об аккаунте</h3>
-            <p><strong>Email:</strong> @User.Identity?.Name</p>
-            <p><strong>Роли:</strong></p>
-            <ul>
-                @foreach (var role in User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))
+    <div class="profile-grid">
+        <div class="profile-left panel">
+            <div class="avatar-block">
+                @if (ViewBag.AvatarPath != null)
                 {
-                    <li>@role</li>
+                    <img class="avatar-img" src="@ViewBag.AvatarPath" alt="Аватар" />
                 }
-            </ul>
-        </div>
-        <div style="flex: 1;">
-            <h3>Доступные разделы</h3>
-            <ul>
-                <li><a href="/Projects">📊 Проекты</a> - управление проектами</li>
-                <li><a href="/Customers">🏢 Заказчики</a> - реестр заказчиков</li>
-                <li><a href="/Employees">👥 Сотрудники</a> - реестр сотрудников</li>
-                <li><a href="/Executors">👨‍💻 Исполнители</a> - реестр физ.лиц</li>
-                <li><a href="/Subcontractors">🤝 Субподрядчики</a> - реестр ЮЛ/ИП</li>
-                <li><a href="/Equipments">🖥️ Оборудование</a> - реестр оборудования</li>
-                <li><a href="/Settings">⚙️ Параметры</a> - настройки компании</li>
-            </ul>
-        </div>
-    </div>
-    
-    <hr />
-    
-    <form asp-controller="Account" asp-action="Logout" method="post">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn" style="background: #dc3545;">🚪 Выйти из системы</button>
-    </form>
-</div>
+                else
+                {
+                    <div class="avatar-img" style="display:flex;align-items:center;justify-content:center;background:rgba(42,82,152,0.25);">
+@{
+                            var firstName = User.Claims.FirstOrDefault(c => c.Type == "FirstName")?.Value;
+                            var initial = string.IsNullOrWhiteSpace(firstName) ? "U" : firstName.Substring(0, 1);
+                        }
 
-@if (ViewBag.Message != null)
-{
-    <div class="card" style="margin-top: 20px; background: #fff3cd; border-left: 4px solid #ffc107;">
-        <p>ℹ️ @ViewBag.Message</p>
+                    </div>
+                }
+
+                <div>
+                    <h3 style="margin:0;">@User.Claims.FirstOrDefault(c => c.Type == "FirstName")?.Value @User.Claims.FirstOrDefault(c => c.Type == "LastName")?.Value</h3>
+                    <div class="muted">@User.Claims.FirstOrDefault(c => c.Type == "Position")?.Value ?? "—"</div>
+                </div>
+            </div>
+
+            <hr style="border-color:rgba(255,255,255,0.12);" />
+
+            <form asp-action="UploadAvatar" asp-controller="Profiles" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <input type="file" name="avatar" accept="image/png,image/jpeg,image/gif" required />
+                    <button type="submit" class="btn" style="background:#2a5298;">Загрузить аватар</button>
+                </div>
+                <div class="muted" style="margin-top:8px;">Файлы: png/jpg/jpeg/gif (до 2MB)</div>
+            </form>
+
+            <hr style="border-color:rgba(255,255,255,0.12); margin-top:16px;" />
+
+            <div>
+                <h3>Информация об аккаунте</h3>
+                <p><strong>Email:</strong> @User.Identity?.Name</p>
+                <p><strong>Имя:</strong> @(User.Claims.FirstOrDefault(c => c.Type == "FirstName")?.Value ?? "—")</p>
+                <p><strong>Фамилия:</strong> @(User.Claims.FirstOrDefault(c => c.Type == "LastName")?.Value ?? "—")</p>
+                <p><strong>Должность:</strong> @(User.Claims.FirstOrDefault(c => c.Type == "Position")?.Value ?? "—")</p>
+                <p><strong>Роли:</strong></p>
+                <ul>
+                    @foreach (var role in User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))
+                    {
+                        <li>@role</li>
+                    }
+                </ul>
+            </div>
+
+            <hr style="border-color:rgba(255,255,255,0.12); margin-top:16px;" />
+
+            <a href="/Account/Logout" class="btn" style="background:#dc3545; width:100%; text-align:center;">Выйти из системы</a>
+        </div>
+
+        <div class="profile-right panel">
+            <h3 style="margin-top:0;">История действий (последние 50)</h3>
+            <div class="muted" style="margin-bottom:10px;">
+                Каждые 10 минут фоновый процесс добавляет Snapshot10m в БД.
+                Регистрация/загрузка аватара также логируются.
+            </div>
+
+            <table class="audit-table" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Действие</th>
+                        <th>Entity</th>
+                        <th>Новое</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.AuditLogs != null)
+                    {
+                        foreach (var l in (IEnumerable<WebWorkNew.Models.UserAuditLog>)ViewBag.AuditLogs)
+                        {
+                            <tr>
+                                <td>@l.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@l.Action</td>
+                                <td>@l.Entity</td>
+                                <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@l.NewValue</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="4">История пока пуста</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-}
+</div>

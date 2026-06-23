@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pGVc8B8fmvGppM3uJvzwfzio5UtMC8LCk8QdNBc/TFo=",
+  "Hash": "5m6xOxlkeFJp56Tpf6z/21BnQklKa9qFUUJkj7A6jOw=",
   "Source": "WebWorkNew",
   "BasePath": "_content/WebWorkNew",
   "Mode": "Default",
@@ -59,6 +59,27 @@
       "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\jquery\\dist\\jquery.slim.min.js"
     },
     {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1mx0oqs8nq-88su1ewyi0.gz",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/admin-help#[.{fingerprint=88su1ewyi0}]?.js.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "4hcl0if21j",
+      "Integrity": "aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js"
+    },
+    {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1xindg1lbd-rzd6atqjts.gz",
       "SourceId": "WebWorkNew",
       "SourceType": "Discovered",
@@ -99,6 +120,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\23xpoufkog-f5seam8z2x.gz",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/tinymce-init#[.{fingerprint=f5seam8z2x}]?.js.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "w62czuajwt",
+      "Integrity": "6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js"
     },
     {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\260yb1zcwl-ag7o75518u.gz",
@@ -519,6 +561,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\d82du97cz9-g3fo28hkky.gz",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/resource-api#[.{fingerprint=g3fo28hkky}]?.js.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "2ylrs11mt4",
+      "Integrity": "JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js"
     },
     {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\dyzrco2p8f-fkydq0zt2p.gz",
@@ -1046,6 +1109,27 @@
       "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\jquery-validation\\LICENSE.md"
     },
     {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\qglv0hwohu-8zwceil3hb.gz",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "css/admin-neon#[.{fingerprint=8zwceil3hb}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "ghweuivurz",
+      "Integrity": "9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css"
+    },
+    {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\r85mbb3l0f-khv3u5hwcm.gz",
       "SourceId": "WebWorkNew",
       "SourceType": "Discovered",
@@ -1403,6 +1487,27 @@
       "OriginalItemSpec": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\WebWorkNew.bundle.scp.css"
     },
     {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "css/admin-neon#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "8zwceil3hb",
+      "Integrity": "9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\admin-neon.css"
+    },
+    {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\site.css",
       "SourceId": "WebWorkNew",
       "SourceType": "Discovered",
@@ -1445,6 +1550,48 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/admin-help#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "88su1ewyi0",
+      "Integrity": "mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\admin-help.js"
+    },
+    {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/resource-api#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "g3fo28hkky",
+      "Integrity": "lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\resource-api.js"
+    },
+    {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\site.js",
       "SourceId": "WebWorkNew",
       "SourceType": "Discovered",
@@ -1464,6 +1611,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js",
+      "SourceId": "WebWorkNew",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\",
+      "BasePath": "_content/WebWorkNew",
+      "RelativePath": "js/tinymce-init#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f5seam8z2x",
+      "Integrity": "AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\tinymce-init.js"
     },
     {
       "Identity": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
@@ -2728,6 +2896,304 @@
   ],
   "Endpoints": [
     {
+      "Route": "css/admin-neon.8zwceil3hb.css",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\qglv0hwohu-8zwceil3hb.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000702247191"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1423"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "8zwceil3hb"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admin-neon.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI="
+        }
+      ]
+    },
+    {
+      "Route": "css/admin-neon.8zwceil3hb.css",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5019"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "8zwceil3hb"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admin-neon.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI="
+        }
+      ]
+    },
+    {
+      "Route": "css/admin-neon.8zwceil3hb.css.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\qglv0hwohu-8zwceil3hb.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1423"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "8zwceil3hb"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admin-neon.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk="
+        }
+      ]
+    },
+    {
+      "Route": "css/admin-neon.css",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\qglv0hwohu-8zwceil3hb.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000702247191"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1423"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI="
+        }
+      ]
+    },
+    {
+      "Route": "css/admin-neon.css",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5019"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-9JcDrCcKICEgj6GU+jo5TAW4EE3hPOGrBLeGABYFFdI="
+        }
+      ]
+    },
+    {
+      "Route": "css/admin-neon.css.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\qglv0hwohu-8zwceil3hb.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1423"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:30:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-9HFw101RwhgkeT8zeHeEHSc2iS9TvM+sEiDMt+VidQk="
+        }
+      ]
+    },
+    {
       "Route": "css/site.b9sayid5wm.css",
       "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\eoz51p8upr-b9sayid5wm.gz",
       "Selectors": [
@@ -3324,6 +3790,602 @@
       ]
     },
     {
+      "Route": "js/admin-help.88su1ewyi0.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1mx0oqs8nq-88su1ewyi0.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.002762430939"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "361"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "88su1ewyi0"
+        },
+        {
+          "Name": "label",
+          "Value": "js/admin-help.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E="
+        }
+      ]
+    },
+    {
+      "Route": "js/admin-help.88su1ewyi0.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "871"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "88su1ewyi0"
+        },
+        {
+          "Name": "label",
+          "Value": "js/admin-help.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E="
+        }
+      ]
+    },
+    {
+      "Route": "js/admin-help.88su1ewyi0.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1mx0oqs8nq-88su1ewyi0.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "361"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "88su1ewyi0"
+        },
+        {
+          "Name": "label",
+          "Value": "js/admin-help.js.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw="
+        }
+      ]
+    },
+    {
+      "Route": "js/admin-help.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1mx0oqs8nq-88su1ewyi0.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.002762430939"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "361"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E="
+        }
+      ]
+    },
+    {
+      "Route": "js/admin-help.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "871"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-mPwiGUI+01iidIO4Cap3H3GomBdEthYLgAZTrbWrH4E="
+        }
+      ]
+    },
+    {
+      "Route": "js/admin-help.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\1mx0oqs8nq-88su1ewyi0.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "361"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 15 Jun 2026 00:31:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-aCrq+/lD0ag8jZ6vgarMSLyRlcRoM4+MThm4g3RAdjw="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.g3fo28hkky.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\d82du97cz9-g3fo28hkky.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001647446458"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "606"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "g3fo28hkky"
+        },
+        {
+          "Name": "label",
+          "Value": "js/resource-api.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.g3fo28hkky.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1377"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "g3fo28hkky"
+        },
+        {
+          "Name": "label",
+          "Value": "js/resource-api.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.g3fo28hkky.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\d82du97cz9-g3fo28hkky.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "606"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "g3fo28hkky"
+        },
+        {
+          "Name": "label",
+          "Value": "js/resource-api.js.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\d82du97cz9-g3fo28hkky.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001647446458"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "606"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1377"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-lCtNriznHXyry+u+jz02sg355VqLUHGIkbDwYhKM+3g="
+        }
+      ]
+    },
+    {
+      "Route": "js/resource-api.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\d82du97cz9-g3fo28hkky.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "606"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 17 Jun 2026 16:35:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-JoguH55xwMP4N4g/NhGOHCuL+VfjIEIHPZk51/3GnHw="
+        }
+      ]
+    },
+    {
       "Route": "js/site.js",
       "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\e09oj6jdn4-xtxxf3hu2r.gz",
       "Selectors": [
@@ -3618,6 +4680,304 @@
         {
           "Name": "integrity",
           "Value": "sha256-Ydq7YvQUzhbo68waLZeQvZnPOvmTeQ+HyDqjkA1whsA="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.f5seam8z2x.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\23xpoufkog-f5seam8z2x.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000705716302"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1416"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f5seam8z2x"
+        },
+        {
+          "Name": "label",
+          "Value": "js/tinymce-init.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.f5seam8z2x.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3231"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f5seam8z2x"
+        },
+        {
+          "Name": "label",
+          "Value": "js/tinymce-init.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.f5seam8z2x.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\23xpoufkog-f5seam8z2x.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1416"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f5seam8z2x"
+        },
+        {
+          "Name": "label",
+          "Value": "js/tinymce-init.js.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\23xpoufkog-f5seam8z2x.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000705716302"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1416"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.js",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3231"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AyiWcTJ8eE9HPdSpQxCsf4CyT3xkTtebuM07G03P3L0="
+        }
+      ]
+    },
+    {
+      "Route": "js/tinymce-init.js.gz",
+      "AssetFile": "D:\\Desktop\\Техническое задание\\WebWorkNew\\obj\\Debug\\net9.0\\compressed\\23xpoufkog-f5seam8z2x.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1416"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Jun 2026 10:37:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-6M6909VxSh+YINP/awO+0D4EAagYHStF6Z6gxxqDevA="
         }
       ]
     },
@@ -21310,7 +22670,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21363,7 +22723,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21400,7 +22760,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21447,7 +22807,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21508,7 +22868,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21553,7 +22913,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21608,7 +22968,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21669,7 +23029,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21714,7 +23074,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21769,7 +23129,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21822,7 +23182,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21859,7 +23219,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Jun 2026 00:00:27 GMT"
+          "Value": "Mon, 22 Jun 2026 21:47:23 GMT"
         },
         {
           "Name": "Cache-Control",

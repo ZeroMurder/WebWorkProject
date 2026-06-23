@@ -1,4 +1,4 @@
-namespace WebWork.Models;
+namespace WebWorkNew.Models;
 
 public class Employee
 {

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using WebWork.Models;
-using WebWork.Enums;
-using WebWork.Services;
+using WebWorkNew.Models;
+using WebWorkNew.Enums;
+using WebWorkNew.Services;
 
-namespace WebWork.Data;
+namespace WebWorkNew.Data;
 
 public static class TestDataSeeder
 {
@@ -35,20 +35,20 @@ public static class TestDataSeeder
             // Customers
             var c1 = new Customer
             {
-                Inn = "7707083893",
+                Inn = "7000000000",
                 Type = CustomerType.LegalEntity,
-                Name = "ООО Ромашка",
-                FullName = "Иванов И.И.",
-                Email = "buyer@example.com",
-                Phone = "+79990000000"
+                Name = "ООО Test",
+                FullName = "Test T.T.",
+                Email = "test@example.com",
+                Phone = "+70000000000"
             };
 
             var c2 = new Customer
             {
-                Inn = "1234567890",
+                Inn = "000000000",
                 Type = CustomerType.IndividualEntrepreneur,
-                FullName = "Петров П.П.",
-                Email = "ip@example.com",
+                FullName = "Test1 T.T.",
+                Email = "test1@example.com",
                 Phone = "+79990000011"
             };
 
@@ -58,9 +58,9 @@ public static class TestDataSeeder
             // Employees
             var e1 = new Employee
             {
-                Surname = "Смирнов",
-                Name = "Алексей",
-                Patronymic = "Игоревич",
+                Surname = "Testing",
+                Name = "Testov",
+                Patronymic = "Testing1",
                 Position = "Разработчик",
                 MonthlySalary = 200000,
                 TaxRate = 30.2m
@@ -68,8 +68,8 @@ public static class TestDataSeeder
             
             var e2 = new Employee
             {
-                Surname = "Кузнецова",
-                Name = "Мария",
+                Surname = "Test2",
+                Name = "Test2.2",
                 Patronymic = null,
                 Position = "QA",
                 MonthlySalary = 120000,
@@ -82,8 +82,8 @@ public static class TestDataSeeder
             // Executors (physical persons)
             var ex1 = new Executor
             {
-                Surname = "Сидоров",
-                Name = "Дмитрий",
+                Surname = "Test3",
+                Name = "Testov3",
                 Patronymic = null,
                 EmploymentType = EmploymentType.FixedSalary,
                 TaxRate = 7.6m,
@@ -98,9 +98,9 @@ public static class TestDataSeeder
             var s1 = new Subcontractor
             {
                 Inn = "7800000000",
-                Name = "ООО ТехИнтеграция",
+                Name = "ООО Testing",
                 ContactName = "Руководитель",
-                Email = "sub@example.com",
+                Email = "example@example.com",
                 Phone = "+79990000222",
                 Unit = TimeUnit.Days,
                 CostPerUnit = 45000m,

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebWork.Data;
-using WebWork.Models;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
 
-namespace WebWork.Controllers;
+namespace WebWorkNew.Controllers;
 
 [Authorize(Roles = "HR")]
 public class EmployeesController : Controller
@@ -43,7 +43,9 @@ public class EmployeesController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var item = await _db.Employees.FirstOrDefaultAsync(x => x.Id == id);
-        if (item == null) return NotFound();
+        if (item == null) 
+        return NotFound();
+                TempData["Success"] = "Строка успешно сработала на строке 48 условие edit == null в Edit в EmployeesController";
         return View(item);
     }
 
@@ -63,7 +65,9 @@ public class EmployeesController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         var item = await _db.Employees.FirstOrDefaultAsync(x => x.Id == id);
-        if (item == null) return NotFound();
+        if (item == null) 
+        return NotFound();
+        TempData["Success"] = "Строка успешно сработала на строке 68 условие item == null в Delete в EmployeesController";
         return View(item);
     }
 
@@ -77,6 +81,7 @@ public class EmployeesController : Controller
             _db.Employees.Remove(item);
             await _db.SaveChangesAsync();
         }
+        TempData["Success"] = "Строка 80 DeleteConfirmed работает в EmployeesController";
         return RedirectToAction(nameof(Index));
     }
 }

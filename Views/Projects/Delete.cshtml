@@ -1,10 +1,10 @@
-@model WebWork.Models.Project
+@model WebWorkNew.Models.Project
 @{
     ViewData["Title"] = "Удаление проекта";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>🗑️ Удаление проекта</h2>
+<h2> Удаление проекта</h2>
 
 <div class="card" style="background:#fff3e0; border-left: 4px solid #ff9800;">
     <p>Вы уверены, что хотите удалить проект <strong>@Model.Title</strong>?</p>
@@ -14,6 +14,6 @@
 <form method="post" asp-action="DeleteConfirmed">
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" value="@Model.Id" />
-    <button type="submit" class="btn" style="background:#dc3545;">🗑️ Да, удалить</button>
-    <a href="/Projects" class="btn-secondary">❌ Отмена</a>
+    <button type="submit" class="btn" style="background:#dc3545;"> Да, удалить</button>
+    <a href="/Projects" class="btn-secondary"> Отмена</a>
 </form>

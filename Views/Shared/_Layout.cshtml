@@ -4,75 +4,338 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebWork</title>
+
+    <link rel="stylesheet" href="/css/admin-neon.css" />
+
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
-        .app-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 24px; }
-        .app-header h1 { margin: 0; font-size: 22px; }
-        .app-header p { margin: 5px 0 0; opacity: 0.8; font-size: 13px; }
-        .nav-bar { background: white; border-bottom: 1px solid #e0e0e0; padding: 0 24px; }
-        .nav-links { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0; }
-        .nav-links a { padding: 8px 16px; text-decoration: none; color: #2c3e50; border-radius: 6px; background: #f8f9fa; }
-        .nav-links a:hover { background: #e9ecef; }
-        .main-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #2a5298; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; }
-        .btn-secondary { background: #6c757d; }
-        .btn:hover { opacity: 0.9; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; font-weight: 600; }
+
+
+        /* Admin neon skin (for GlobalAdmin) */
+        @* CSS injected below via <link> *@
+
+        :root{
+
+            --bg0:#070A12;
+            --bg1:#0B1430;
+            --panel: rgba(255,255,255,.06);
+            --panel2: rgba(255,255,255,.08);
+            --stroke: rgba(255,255,255,.14);
+            --text:#EAF2FF;
+            --muted: rgba(234,242,255,.7);
+            --accent:#7C3AED; /* purple */
+            --accent2:#22D3EE; /* cyan */
+            --danger:#FF4D6D;
+            --shadow: 0 18px 60px rgba(0,0,0,.45);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background:
+                radial-gradient(1200px 600px at 15% 10%, rgba(124,58,237,.35), transparent 55%),
+                radial-gradient(900px 450px at 85% 30%, rgba(34,211,238,.25), transparent 50%),
+                linear-gradient(180deg, var(--bg0), var(--bg1));
+            color: var(--text);
+        }
+
+        .app-header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(124,58,237,.35) 0%, rgba(34,211,238,.22) 100%);
+            border-bottom: 1px solid rgba(255,255,255,.12);
+            padding: 18px 24px;
+        }
+
+        .app-header:after{
+            content:"";
+            position:absolute;
+            inset:-2px;
+            background:
+                radial-gradient(500px 150px at 20% 0%, rgba(124,58,237,.45), transparent 60%),
+                radial-gradient(500px 150px at 80% 0%, rgba(34,211,238,.35), transparent 60%);
+            pointer-events:none;
+            filter: blur(0px);
+            opacity:.75;
+        }
+
+        .app-header > *{ position:relative; z-index:1; }
+        .app-header h1 { margin: 0; font-size: 22px; letter-spacing:.2px; }
+        .app-header p { margin: 6px 0 0; opacity: 0.9; font-size: 13px; color: var(--muted); }
+
+        .nav-bar {
+            background: rgba(255,255,255,.03);
+            border-bottom: 1px solid rgba(255,255,255,.10);
+            padding: 0 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 0;
+            align-items: center;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 10px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.10);
+            transition: .18s ease;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,.10);
+            border-color: rgba(255,255,255,.18);
+            box-shadow: 0 10px 30px rgba(124,58,237,.16);
+        }
+
+        .nav-links a[aria-disabled="true"],
+        .nav-links a.disabled {
+            opacity:.45;
+            pointer-events:none;
+            filter: grayscale(1);
+        }
+
+        .main-content {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(34,211,238,.85));
+            color: #071021;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .18s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+        .btn-secondary {
+            background: rgba(255,255,255,.10);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.16);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, rgba(255,77,109,.95), rgba(124,58,237,.65));
+            color: #071021;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        th {
+            background: rgba(255,255,255,.06);
+            font-weight: 700;
+        }
+
         .field { margin-bottom: 16px; }
-        .field label { display: block; font-weight: 600; margin-bottom: 6px; }
-        .field input, .field select, .field textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .field label { display: block; font-weight: 700; margin-bottom: 6px; color: var(--muted); }
+
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: rgba(255,255,255,.05);
+            color: var(--text);
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .field input::placeholder, .field textarea::placeholder { color: rgba(234,242,255,.45); }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: rgba(124,58,237,.6);
+            box-shadow: 0 0 0 3px rgba(124,58,237,.18);
+        }
+
         .row { display: flex; gap: 16px; flex-wrap: wrap; }
         .row > * { flex: 1; }
-        .app-footer { background: white; border-top: 1px solid #e0e0e0; padding: 15px; text-align: center; color: #6c757d; margin-top: 40px; font-size: 12px; }
+
+        .app-footer {
+            background: rgba(255,255,255,.02);
+            border-top: 1px solid rgba(255,255,255,.10);
+            padding: 18px;
+            text-align: center;
+            color: var(--muted);
+            margin-top: 40px;
+            font-size: 12px;
+        }
+
+        .text-danger { color: var(--danger); font-size: 12px; margin-top: 4px; display: block; }
+
+        .status-badge { padding: 4px 10px; border-radius: 999px; font-size: 12px; display: inline-block; border: 1px solid rgba(255,255,255,.15); }
+        .status-draft { background: rgba(255,255,255,.06); color: rgba(234,242,255,.7); }
+        .status-active { background: rgba(34,197,94,.15); color: #7CFFB1; border-color: rgba(34,197,94,.28); }
+        .status-paused { background: rgba(245,158,11,.15); color: #FFD28A; border-color: rgba(245,158,11,.28); }
+        .status-completed { background: rgba(59,130,246,.18); color: #B6D5FF; border-color: rgba(59,130,246,.28); }
+        .status-cancelled { background: rgba(255,77,109,.18); color: #FF9FB1; border-color: rgba(255,77,109,.30); }
+
+        /* Futuristic accents */
+        .accent-glow{ box-shadow: 0 0 0 1px rgba(124,58,237,.25), 0 10px 60px rgba(124,58,237,.18); }
     </style>
 </head>
 <body>
     <div class="app-header">
-        <h1>🧠 WebWork | Система расчета стоимости IT-проектов</h1>
+        <h1> WebWork | Система расчета стоимости IT-проектов</h1>
         <p>Управление проектами, ресурсами и документами</p>
     </div>
     
     <div class="nav-bar">
         <div class="nav-links">
-            <a href="/Projects">📊 Проекты</a>
-            <a href="/Customers">🏢 Заказчики</a>
-            <a href="/Employees">👥 Сотрудники</a>
-            <a href="/Executors">👨‍💻 Исполнители</a>
-            <a href="/Subcontractors">🤝 Субподрядчики</a>
-            <a href="/Settings">⚙️ Параметры</a>
+            <a href="/Workspaces"> Рабочие области</a>
+            @if (User.IsInRole("GlobalAdmin"))
+            {
+                <a href="/AdminUsers"> Управление пользователями</a>
+            }
+            <a href="/Projects"> Проекты</a>
+            <a href="/Customers"> Заказчики</a>
+            <a href="/Employees"> Сотрудники</a>
+            <a href="/Executors"> Исполнители</a>
+            <a href="/Subcontractors"> Субподрядчики</a>
+            <a href="/Equipments"> Оборудование</a>
+            <a href="/Settings"> Параметры</a>
 
+            <a href="#" data-open-admin-help class="btn-secondary" style="padding:8px 12px; text-decoration:none;" title="Помощь">?</a>
 
             @if (User?.Identity?.IsAuthenticated == true)
+
             {
                 <span style="flex:1"></span>
-                <span style="padding:8px 12px;">👋 @User.Identity.Name</span>
-                <a href="/Profiles/Index">⚙️ Профиль</a>
-                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" style="background:#dc3545; color:white; border:none; padding:8px 16px; border-radius:6px; text-decoration:none;">🚪 Выйти</a>
-                <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
-                    @Html.AntiForgeryToken()
-                </form>
+                <span style="padding:8px 12px;"> @User.Identity.Name</span>
+                <a href="/Profiles/Index"> Профиль</a>
+                <a href="/Account/Logout" class="btn btn-danger" style="padding:8px 16px;"> Выйти</a>
             }
             else
             {
                 <span style="flex:1"></span>
-                <a href="/Account/Login">🔐 Вход</a>
-                <a href="/Register/Register">📝 Регистрация</a>
+                <a href="/Account/Login"> Вход</a>
+                <a href="/Register/Register"> Регистрация</a>
             }
         </div>
     </div>
+        @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
     
     <div class="main-content">
-        @RenderBody()  @* ЭТО САМОЕ ВАЖНОЕ - БЕЗ ЭТОГО НЕ РАБОТАЕТ *@
+        @RenderBody()
     </div>
+
+    <!-- Toastr JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Привязка TempData alert'ов к Toastr
+        (function () {
+            const success = @((TempData["Success"] ?? null) == null ? "null" : "\"" + TempData["Success"].ToString().Replace("\"", "\\\"") + "\"");
+            const error = @((TempData["Error"] ?? null) == null ? "null" : "\"" + TempData["Error"].ToString().Replace("\"", "\\\"") + "\"");
+            const warning = @((TempData["Warning"] ?? null) == null ? "null" : "\"" + TempData["Warning"].ToString().Replace("\"", "\\\"") + "\"");
+            const info = @((TempData["Info"] ?? null) == null ? "null" : "\"" + TempData["Info"].ToString().Replace("\"", "\\\"") + "\"");
+
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: "toast-top-right",
+                preventDuplicates: true,
+                showDuration: 300,
+                hideDuration: 1000,
+                timeOut: 5000,
+                extendedTimeOut: 1000
+            };
+
+            if (success) toastr.success(success);
+            else if (error) toastr.error(error);
+            else if (warning) toastr.warning(warning);
+            else if (info) toastr.info(info);
+        })();
+    </script>
+    
     
     <div class="app-footer">
         <p>© 2026 WebWork - Система расчета стоимости IT-проектов. Все права защищены.</p>
     </div>
-    
+
+    <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <!-- TinyMCE (WYSIWYG) -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="/js/tinymce-init.js"></script>
+
+    <!-- Admin help overlay + F12 helper -->
+    <div id="adminHelpOverlay" class="admin-modal-overlay" onclick="if(event.target===this){closeAdminHelp();}">
+      <div class="admin-modal">
+        <header>
+          <div class="t">? Помощь по работе с системой</div>
+        </header>
+        <div class="content">
+          <ul>
+            <li><b>Куда смотреть:</b> карточки и кнопки находятся вверху и на страницах проектов/рабочих областей.</li>
+            <li><b>Пользователь:</b> для входа используй кнопку <b>Вход</b> и логин/пароль.</li>
+            <li><b>Регистрация:</b> заполняй поля ФИО, email (он же логин), должность и пароль.</li>
+            <li><b>ТЗ (Technical Task):</b> в проекте можно создать/редактировать техническое задание и затем экспортировать документы.</li>
+          </ul>
+          <div style="opacity:.85">
+            Окно можно открыть кнопкой «?» справа вверху или через клавишу <b>F12</b>.
+          </div>
+        </div>
+        <footer>
+          <button class="admin-close" type="button" onclick="closeAdminHelp()">Закрыть</button>
+        </footer>
+      </div>
+    </div>
+
+    <script src="/js/admin-help.js"></script>
+
+    <script src="/js/resource-api.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

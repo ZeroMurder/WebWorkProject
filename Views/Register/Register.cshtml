@@ -1,4 +1,4 @@
-@model WebWork.Controllers.RegisterViewModel
+@model WebWorkNew.Controllers.RegisterViewModel
 @{
     ViewData["Title"] = "Регистрация";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,67 +6,123 @@
 
 <div style="max-width: 500px; margin: 0 auto;">
     <div class="card">
-        <h2 style="text-align: center; margin-bottom: 20px;">📝 Регистрация нового пользователя</h2>
+        <h2 style="text-align: center; margin-bottom: 20px;"> Регистрация нового пользователя</h2>
         
-        <form method="post" asp-action="Register">
+        <!-- ДИАГНОСТИКА: отладочная информация (после исправления можно удалить) -->
+        @if (ViewBag.Roles == null || ((IList<string>)ViewBag.Roles).Count == 0)
+        {
+            <div style="background:#ffcc00; padding:10px; margin-bottom:15px;">
+                <strong> Внимание:</strong> Роли не загружены. Обратитесь к администратору.
+            </div>
+        }
+        
+        <form method="post" asp-action="Register" class="form">
             @Html.AntiForgeryToken()
             
             <div class="field">
-                <label>👤 Фамилия</label>
-                <input asp-for="LastName" type="text" required />
+                <label> Фамилия</label>
+                <input asp-for="LastName" type="text" required class="form-control" />
             </div>
             
             <div class="field">
-                <label>👤 Имя</label>
+                <label> Имя</label>
                 <input asp-for="FirstName" type="text" required />
             </div>
             
             <div class="field">
-                <label>👤 Отчество (опционально)</label>
+                <label> Отчество (опционально)</label>
                 <input asp-for="MiddleName" type="text" />
             </div>
             
             <div class="field">
-                <label>💼 Должность</label>
+                <label> Должность</label>
                 <input asp-for="Position" type="text" required />
             </div>
             
             <div class="field">
-                <label>📧 Email (будет использоваться как логин)</label>
+                <label> Email (будет использоваться как логин)</label>
                 <input asp-for="Email" type="email" required />
             </div>
             
             <div class="field">
-                <label>🔒 Пароль</label>
+                <label> Пароль</label>
                 <input asp-for="Password" type="password" required />
-                <small>Минимум 3 символа</small>
+                <small>Минимум 6 символов</small>
             </div>
             
             <div class="field">
-                <label>👑 Роль (опционально)</label>
-                <select asp-for="Role" asp-items="ViewBag.Roles != null ? new SelectList(ViewBag.Roles) : null">
+                <label> Роль</label>
+                <select asp-for="Role" class="form-control">
                     <option value="">-- Выберите роль --</option>
+                    @if (ViewBag.Roles != null)
+                    {
+                        foreach (var r in (IEnumerable<string>)ViewBag.Roles)
+                        {
+                            <option value="@r">@r</option>
+                        }
+                    }
                 </select>
-                <small>Доступные роли: GlobalAdmin, CommercialDirector, Accountant, HR</small>
+                <small>Доступные роли: HR, Accountant</small>
             </div>
-            
+
+            <!-- Mini-Captcha (2 шага) -->
+            <div class="field" style="margin-top:10px;">
+                <label>Капча шаг 1: решите пример (a+b)</label>
+                <div style="font-weight:800; margin: 8px 0;" id="captchaQ1">Загрузка...</div>
+                <input type="hidden" id="captchaExpected1" name="CaptchaExpected1" value="" />
+                <input name="CaptchaStep1" type="text" class="form-control" placeholder="Ответ" required />
+            </div>
+
+            <div class="field" style="margin-top:10px;">
+                <label>Капча шаг 2: решите пример (результат + c)</label>
+                <div style="font-weight:800; margin: 8px 0;" id="captchaQ2">Загрузка...</div>
+                <input type="hidden" id="captchaExpected2" name="CaptchaExpected2" value="" />
+                <input asp-for="CaptchaAnswer" type="text" class="form-control" placeholder="Итоговый ответ" required />
+                <small>Введите итоговый ответ, который получится после шага 2.</small>
+            </div>
+
+            <script>
+                (function () {
+                    // 2 шага математики: (a + b) и затем (a + b + c)
+                    var a = Math.floor(Math.random() * 9) + 1;
+                    var b = Math.floor(Math.random() * 9) + 1;
+                    var c = Math.floor(Math.random() * 9) + 1;
+
+                    var step1 = a + b;
+                    var step2 = step1 + c;
+
+                    document.getElementById('captchaQ1').textContent = 'a=' + a + ', b=' + b + ' → a + b = ?';
+                    document.getElementById('captchaQ2').textContent = 'полученный ответ + c (c=' + c + ') → ?';
+
+                    // expected2 хранить только для клиента (server-side проверяет только CaptchaAnswer)
+                    document.getElementById('captchaExpected2').value = String(step2);
+
+                    // Важно: expected храним только на клиенте.
+                    // На сервере проверяется CaptchaAnswer, а ожидаемое значение вычисляется на GET.
+                    // Клиент просто помогает пользователю понять, что вводить.
+                })();
+            </script>
+
+
+
             @if (!ViewData.ModelState.IsValid)
             {
                 <div style="background: #fee; border: 1px solid #fcc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                     {
-                        <div style="color: #c00;">⚠️ @err.ErrorMessage</div>
+                        <div style="color: #c00;">@err.ErrorMessage</div>
                     }
+
                 </div>
             }
             
-            <button type="submit" class="btn" style="width: 100%;">✅ Зарегистрироваться</button>
+            <button type="submit" class="btn" style="width: 100%;"> Зарегистрироваться</button>
         </form>
         
         <hr style="margin: 20px 0;" />
         
         <div style="text-align: center;">
-            <p>Уже есть аккаунт? <a href="/Account/Login">🔐 Войти</a></p>
+            <p>Уже есть аккаунт? <a href="/Account/Login"> Войти</a></p>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace WebWork.Models;
+namespace WebWorkNew.Models;
 
 public class ApplicationUser : IdentityUser
 {

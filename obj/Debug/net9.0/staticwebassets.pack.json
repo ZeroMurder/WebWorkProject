@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\WebWorkNew.fkydq0zt2p.bundle.scp.css"
     },
     {
+      "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\admin-neon.css",
+      "PackagePath": "staticwebassets\\css\\admin-neon.css"
+    },
+    {
       "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -13,8 +17,20 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\admin-help.js",
+      "PackagePath": "staticwebassets\\js\\admin-help.js"
+    },
+    {
+      "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\resource-api.js",
+      "PackagePath": "staticwebassets\\js\\resource-api.js"
+    },
+    {
       "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\js\\tinymce-init.js",
+      "PackagePath": "staticwebassets\\js\\tinymce-init.js"
     },
     {
       "Id": "D:\\Desktop\\Техническое задание\\WebWorkNew\\wwwroot\\lib\\bootstrap\\LICENSE",

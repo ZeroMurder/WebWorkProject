@@ -1,4 +1,5 @@
-@model IEnumerable<WebWork.Models.Customer>
+@model X.PagedList.IPagedList<WebWorkNew.Models.Customer>
+@using X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Реестр заказчиков";
@@ -7,11 +8,29 @@
 
 <h2>Реестр заказчиков</h2>
 
-<p>
+<div style="margin: 12px 0 18px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
     <a class="btn" href="/Customers/Create">➕ Создать заказчика</a>
-</p>
 
-<table>
+    <form asp-action="Index" method="get" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <input type="text" name="search" class="form-control" placeholder="Поиск по ИНН/ФИО/Email/Телефон" 
+               value="@(ViewBag.CurrentSearch ?? "")" style="min-width:340px;" />
+        <button class="btn btn-primary" type="submit">Найти</button>
+
+        @if (!string.IsNullOrWhiteSpace((string?)ViewBag.CurrentSearch))
+        {
+            <a class="btn btn-secondary" asp-action="Index">Сбросить</a>
+        }
+
+        <select name="pageSize" class="form-select" onchange="this.form.submit()" style="width:120px;">
+            @foreach (var s in new[] { 10, 25, 50, 100 })
+            {
+                <option value="@s" selected="@(ViewBag.CurrentPageSize == s ? "selected" : null)">@s</option>
+            }
+        </select>
+    </form>
+</div>
+
+<table class="data-table">
     <thead>
     <tr>
         <th>ID</th>
@@ -36,11 +55,22 @@
             <td>@c.Email</td>
             <td>@c.Phone</td>
             <td>
-                <a class="btn secondary" href="/Customers/Edit/@c.Id">✏️ Edit</a>
-                <a class="btn secondary" href="/Customers/Delete/@c.Id">🗑️ Delete</a>
+                <a class="btn secondary" href="/Customers/Edit/@c.Id"> Edit</a>
+                <a class="btn secondary" href="/Customers/Delete/@c.Id"> Delete</a>
             </td>
+        </tr>
+    }
+
+    @if (!Model.Any())
+    {
+        <tr>
+            <td colspan="8" class="text-center text-muted">Нет записей</td>
         </tr>
     }
     </tbody>
 </table>
+
+<div style="margin-top:16px; display:flex; justify-content:center;">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = ViewBag.CurrentSearch, pageSize = ViewBag.CurrentPageSize }))
+</div>
 

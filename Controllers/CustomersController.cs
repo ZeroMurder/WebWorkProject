@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebWork.Data;
-using WebWork.Models;
+using WebWorkNew.Data;
+using WebWorkNew.Models;
+using X.PagedList;
 
-namespace WebWork.Controllers;
+
+namespace WebWorkNew.Controllers;
 
 [Authorize(Roles = "HR")]
 public class CustomersController : Controller
@@ -16,11 +18,33 @@ public class CustomersController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? search, int? page, int pageSize = 10)
     {
-        var items = await _db.Customers.ToListAsync();
-        return View(items);
+        var query = _db.Customers.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(c =>
+                (c.Inn != null && c.Inn.Contains(search)) ||
+                (c.Name != null && c.Name.Contains(search)) ||
+                c.FullName.Contains(search) ||
+                (c.Email != null && c.Email.Contains(search)) ||
+                (c.Phone != null && c.Phone.Contains(search)) ||
+                c.Type.ToString().Contains(search));
+        }
+
+        query = query.OrderByDescending(c => c.Id);
+
+        var pageNumber = page ?? 1;
+        var paged = query.ToPagedList(pageNumber, pageSize);
+
+        ViewBag.CurrentSearch = search;
+        ViewBag.CurrentPageSize = pageSize;
+
+
+        return View(paged);
     }
+
 
     [HttpGet]
     public IActionResult Create()

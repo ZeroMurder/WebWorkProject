@@ -1,62 +1,148 @@
-@model WebWork.Models.Project
+@model WebWorkNew.Models.Project
+
 @{
-    ViewData["Title"] = "Управление проектом";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Редактирование проекта";
+    // Важно: в этом файле НЕ используем partial views, которых может не быть.
 }
-<h2>Управление проектом: реквизиты</h2>
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+<h2>Редактирование проекта: @Model.Title</h2>
 
-    <div class="field">
-        <label asp-for="Title">Название</label>
-        <input asp-for="Title" />
-        <span asp-validation-for="Title" style="color:#dc2626"></span>
-    </div>
+<!-- Этап 2 по ТЗ: вкладки редактирования проекта -->
 
-    <div class="row">
-        <div class="field" style="flex:1; min-width:220px;">
-            <label asp-for="StartDate">Дата начала</label>
-            <input asp-for="StartDate" type="date" />
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="projectTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab">
+                    Основное
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources" type="button" role="tab">
+                    Ресурсы
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="calculation-tab" data-bs-toggle="tab" data-bs-target="#calculation" type="button" role="tab">
+                    Расчет
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="projectTabsContent">
+            <!-- Вкладка Основное -->
+            <div class="tab-pane fade show active" id="main" role="tabpanel">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label asp-for="Title" class="control-label">Название проекта</label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="StartDate" class="control-label">Дата начала</label>
+                                        <input asp-for="StartDate" type="date" class="form-control" />
+                                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="EndDate" class="control-label">Дата окончания</label>
+                                        <input asp-for="EndDate" type="date" class="form-control" />
+                                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Description" class="control-label">Описание</label>
+                                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="CustomerId" class="control-label">Заказчик</label>
+                                <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers as SelectList">
+                                    <option value="">-- Выберите заказчика --</option>
+                                </select>
+                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="TaxRate" class="control-label">Налоговая ставка (%)</label>
+                                <input asp-for="TaxRate" class="form-control" type="number" step="0.01" />
+                                <span asp-validation-for="TaxRate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Status" class="control-label">Статус</label>
+                                <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<WebWorkNew.Models.ProjectStatus>()"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Информация</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Создан:</strong> @Model.Id</p>
+                                    <p><strong>Пользователь:</strong> @User.Identity?.Name</p>
+                                    <hr />
+                                    <p class="text-muted small">
+                                        <i class="bi bi-info-circle"></i>
+                                        После сохранения проекта можно перейти к ресурсам.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <a asp-action="Resources" asp-route-id="@Model.Id" class="btn btn-secondary w-100">
+                                    Перейти к ресурсам
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Сохранить
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Вкладка Ресурсы -->
+            <div class="tab-pane fade" id="resources" role="tabpanel">
+                <div class="alert alert-info">
+                    Управление ресурсами вынесено на отдельную страницу.
+                </div>
+                <a asp-action="Resources" asp-route-id="@Model.Id" class="btn btn-primary">
+                    Открыть ресурсы
+                </a>
+            </div>
+
+            <!-- Вкладка Расчет -->
+            <div class="tab-pane fade" id="calculation" role="tabpanel">
+                <div class="alert alert-info">
+                    Полный расчет доступен на отдельной странице.
+                </div>
+                <a asp-action="Calculation" asp-route-id="@Model.Id" class="btn btn-primary">
+                    Открыть расчет
+                </a>
+            </div>
         </div>
-        <div class="field" style="flex:1; min-width:220px;">
-            <label asp-for="EndDate">Дата окончания</label>
-            <input asp-for="EndDate" type="date" />
-        </div>
     </div>
+</div>
 
-    <div class="field">
-        <label asp-for="CustomerId">CustomerId</label>
-        <input asp-for="CustomerId" type="number" />
-    </div>
-
-    <div class="field">
-        <label asp-for="TaxRate">Налог, %</label>
-        <input asp-for="TaxRate" />
-    </div>
-
-    <div class="field">
-        <label asp-for="Description">Описание</label>
-        <textarea asp-for="Description" rows="3"></textarea>
-    </div>
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="validation-summary">
-            <b>Проверьте ошибки ввода</b>
-            <ul>
-                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <li>@err.ErrorMessage</li>
-                }
-            </ul>
-        </div>
-    }
-
-    <div class="row" style="margin-top:14px;">
-        <button type="submit" class="btn">Сохранить</button>
-        <a class="btn secondary" href="/Projects/Resources/@Model.Id" style="margin-left:8px;">К ресурсам</a>
-    </div>
-</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 

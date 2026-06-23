@@ -1,0 +1,25 @@
+@model WebWorkNew.Models.TechnicalTask
+@{
+    ViewData["Title"] = "Техническое задание";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var project = ViewBag.Project as WebWorkNew.Models.Project;
+}
+<h2>Техническое задание: @project?.Title</h2>
+@if (Model == null)
+{
+    <p>ТЗ ещё не создано.</p>
+    <a href="/TechnicalTasks/Edit?projectId=@project?.Id" class="btn">Создать</a>
+}
+else
+{
+    <div class="card">
+        <p><strong>Версия:</strong> @Model.Version</p>
+        <p><strong>Статус:</strong> @Model.Status</p>
+        <p><strong>Цели:</strong> @Model.Goals</p>
+        <p><strong>Функциональные требования:</strong> @Model.FunctionalRequirements</p>
+        <!-- остальные поля -->
+    </div>
+    <a href="/TechnicalTasks/Edit?projectId=@project?.Id" class="btn">Редактировать</a>
+    <a href="/TechnicalTasks/ExportPdf?projectId=@project?.Id" class="btn">PDF</a>
+    <a href="/TechnicalTasks/ExportWord?projectId=@project?.Id" class="btn">Word</a>
+}

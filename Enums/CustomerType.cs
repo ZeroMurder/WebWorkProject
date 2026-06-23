@@ -1,4 +1,4 @@
-namespace WebWork.Enums;
+namespace WebWorkNew.Enums;
 
 public enum CustomerType
 {
